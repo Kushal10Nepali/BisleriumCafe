@@ -1,0 +1,99 @@
+﻿@* @inherits LayoutComponentBase
+
+<!-- Add this line to include Bootstrap CSS from the CDN -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+ *@
+
+@*  @using BisleriumCafe.Data
+
+@inherits LayoutComponentBase
+@inject NavigationManager NavManager
+
+<div class="page">
+
+    @if (_globalState.ActiveUser != null)
+    {
+        <div class="sidebar">
+            <NavMenu Username="@_globalState.ActiveUser.Username" UserRole="@_globalState.ActiveUser.Roles" LogoutHandler="LogoutHandler" />
+        </div>
+    }
+
+    <main>
+        <article class="content px-4">
+            <CascadingValue Value="@_globalState">
+                @Body
+            </CascadingValue>
+        </article>
+    </main>
+</div>
+
+@code {
+    private GlobalState _globalState = new();
+
+    protected override void OnInitialized()
+    {
+        UserService.SeedUsers();
+    }
+
+    private void LogoutHandler()
+    {
+        _globalState.ActiveUser = null;
+        NavManager.NavigateTo("/login");
+    }
+} *@
+
+@using BisleriumCafe.Data
+
+@inherits LayoutComponentBase
+@inject NavigationManager NavManager
+
+<div class="page">
+
+    @if (_globalState.ActiveUser != null)
+    {
+        <div class="sidebar">
+            <NavMenu Username="@_globalState.ActiveUser.Username" UserRole="@_globalState.ActiveUser.Roles" LogoutHandler="LogoutHandler" />
+        </div>
+    }
+
+    <main>
+        <article class="content px-4">
+            <CascadingValue Value="@_globalState">
+                @Body
+            </CascadingValue>
+        </article>
+    </main>
+</div>
+
+@code {
+    private GlobalState _globalState = new();
+
+    protected override void OnInitialized()
+    {
+        UserService.SeedUsers();
+    }
+
+    private void LogoutHandler()
+    {
+        _globalState.ActiveUser = null;
+        NavManager.NavigateTo("/login");
+    }
+}

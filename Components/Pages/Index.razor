@@ -1,0 +1,24 @@
+﻿@page "/"
+@using BisleriumCafe.Data
+@inject NavigationManager NavManager
+
+@code {
+    [CascadingParameter]
+
+    private GlobalState _globalState { get; set; }
+
+    protected override void OnInitialized()
+    {
+
+
+        if (_globalState.ActiveUser == null)
+        {
+            NavManager.NavigateTo("/login");
+        }
+
+        else
+        {
+            NavManager.NavigateTo("/Home");
+        }
+    }
+}

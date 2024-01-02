@@ -1,0 +1,698 @@
+﻿@page "/Home"
+@using BisleriumCafe.Data;
+@using BisleriumCafe.Shared;
+
+@if (_globalState.ActiveUser.Roles == Roles.Admin)
+{
+    <div class="body">
+        <nav class="navbar navbar bg justify-content-between">
+            <h1 class="navbar-brand mb-0 h1">Menus</h1>
+            <div class="d-flex">
+                <input type="search" class="form-control search" placeholder="Search" @oninput="SearchItemName" />
+                <a class='btn text-@(_sortBy == "ItemName" ? "primary" : "secondary")'
+                   @onclick='()=>SortByHandler("ItemName")'>
+
+                </a>
+            </div>
+            @if (_globalState.ActiveUser.Roles == Roles.Admin)
+            {
+                <button class="btn btn-outline-success" type="button" @onclick="OpenAddItemDialog">
+                    <span class="oi oi-plus" /> Add
+                </button>
+            }
+
+        </nav>
+
+
+        <ul class="nav nav-tabs">
+            <li class="nav-item ">
+                <a class='nav-link btn @(_tabFilter == "All" ? "active" : "")' @onclick='()=>TabFilter("All")'>Menu Items</a>
+            </li>
+
+            <li class="nav-item">
+                <a class='nav-link btn @(_tabFilter == "InStock" ? "active" : "")' @onclick='()=>TabFilter("InStock")'>InStock</a>
+            </li>
+            <li class="nav-item">
+                <a class='nav-link btn @(_tabFilter == "OutOfStock" ? "active" : "")' @onclick='()=>TabFilter("OutOfStock")'>OutOfStock</a>
+            </li>
+
+
+        </ul>
+
+
+
+
+
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        <div class="d-flex">
+                            Name
+                            <a class='btn text-@(_sortBy == "ItemName" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
+                               @onclick='()=>SortByHandler("ItemName")'>
+                                <span class='oi oi-sort-@(_sortBy == "ItemName" ? _sortDirection : "ascending")' />
+                            </a>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="d-flex">
+                            Description
+                            <a class='btn text-@(_sortBy == "despcription" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
+                               @onclick='()=>SortByHandler("despcription")'>
+                                <span class='oi oi-sort-@(_sortBy == "despcription" ? _sortDirection : "ascending")' />
+                            </a>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="d-flex">
+                            Price
+                            <a class='btn text-@(_sortBy == "quantity" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
+                               @onclick='()=>SortByHandler("quantity")'>
+                                <span class='oi oi-sort-@(_sortBy == "quantity" ? _sortDirection : "ascending")' />
+                            </a>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="d-flex">
+                            Category
+                            <a class='btn text-@(_sortBy == "quantity" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
+                               @onclick='()=>SortByHandler("quantity")'>
+                                <span class='oi oi-sort-@(_sortBy == "quantity" ? _sortDirection : "ascending")' />
+                            </a>
+                        </div>
+                    </th>
+                    <th>
+                        @if (_globalState.ActiveUser.Roles == Roles.Admin)
+                        {
+                            <div class="d-flex">
+                                Created At
+                                <a class='btn text-@(_sortBy == "createdAt" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
+                                   @onclick='()=>SortByHandler("createdAt")'>
+                                    <span class='oi oi-sort-@(_sortBy == "createdAt" ? _sortDirection : "ascending")' />
+                                </a>
+                            </div>
+                        }
+
+                    </th>
+
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    IEnumerable<CoffeeItems> itemList = _items;
+
+                    if (_sortBy == "ItemName")
+                    {
+                        itemList = _sortDirection == "ascending" ? itemList.OrderBy(t => t.ItemName) : itemList.OrderByDescending(t =>
+                        t.ItemName);
+                    }
+                    else if (_sortBy == "despcription")
+                    {
+                        itemList = _sortDirection == "ascending" ? itemList.OrderBy(t => t.Description) : itemList.OrderByDescending(t =>
+                        t.Description);
+                    }
+                    else if (_sortBy == "quantity")
+                    {
+                        itemList = _sortDirection == "ascending" ? itemList.OrderBy(t => t.Quantity) : itemList.OrderByDescending(t =>
+                        t.Quantity);
+                    }
+
+                    else if (_sortBy == "createdAt")
+                    {
+                        itemList = _sortDirection == "ascending" ? itemList.OrderBy(t => t.CreatedAt) : itemList.OrderByDescending(t =>
+                        t.CreatedAt);
+                    }
+
+
+                    if (_tabFilter == "InStock")
+                    {
+                        itemList = itemList.Where(item => item.isOutOfStock == false);
+                    }
+                    else if (_tabFilter == "OutOfStock")
+                    {
+                        itemList = itemList.Where(item => item.isOutOfStock ==true);
+                    }
+
+                    foreach (var CoffeeItems in itemList)
+                    {
+                        <tr>
+
+                            <td class='@(CoffeeItems.isOutOfStock==true ? "text-decoration-line-through" : "")'>@CoffeeItems.ItemName</td>
+                            <td>@CoffeeItems.Description</td>
+                            <td>
+                                @CoffeeItems.ItemPrice
+
+
+
+                            </td>
+                            <td>
+                                @CoffeeItems.Category
+                            </td>
+                            <td>
+                                @if (_globalState.ActiveUser.Roles == Roles.Admin)
+                                {
+                                    <p class="small mb-0">
+                                        @CoffeeItems.CreatedAt.ToString("MMM dd, yyyy h:mm tt")
+                                    </p>
+                                }
+
+                            </td>
+
+                            <td>
+
+                                @if (_globalState.ActiveUser.Roles == Roles.Admin)
+                                {
+                                    <button class="btn btn-success" type="button"
+                                            @onclick="()=>OpenEditItemDialog(CoffeeItems)">
+                                        <span class="oi oi-pencil" /> Edit
+                                    </button>
+
+                                    <button class="btn btn-dark" type="button" @onclick="()=>OpenDeleteItemDialog(CoffeeItems)">
+                                        <span class="oi oi-delete" /> Delete
+                                    </button>
+
+
+
+                                    <div>
+                                        <Label>
+                                            <input type="checkbox" @bind="CoffeeItems.isOutOfStock" @onclick="() => HandleOutOfStock(CoffeeItems)" />
+                                            Out of Stock
+                                        </Label>
+
+                                    </div>
+
+
+                                }
+                                else
+                                {
+                                    // <button class="btn btn-outline-success" type="button"
+                                    // @onclick="()=>OpenEditItemDialog(CoffeeItems)">
+                                    //     <span class="oi oi-pencil" /> Take Out
+                                    // </button>
+                                }
+
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+        @if (_showEditItemDialog)
+        {
+            <ModalDialog Title="@_dialogTitle" OnClose="@OnEditItemDialogClose" OkLabel="@_dialogOkLabel">
+                <div class="form-floating">
+                    <input id="ItemName" type="text" class="form-control" @bind="_itemModel.ItemName" placeholder="Task Name" />
+                    <label for="ItemName">Item Name</label>
+                </div>
+                <div class="form-floating">
+                    <input id="Description" type="text" class="form-control" @bind="_itemModel.Description" placeholder="Description" />
+                    <label for="Description">Description</label>
+                </div>
+                <div class="form-floating">
+                    <label for="price">Price</label>
+                    <input id="price" type="number" min='0'
+                           value='@_itemModel.ItemPrice' @onchange="updateItemPrice" class="form-control text-left"
+                           placeholder="price">
+                </div>
+
+                <div class="form-floating">
+                    <label for="category">Category</label>
+                    <input id="category" type="text"
+                           value='@_itemModel.Category' @onchange="UpdateCategory" class="form-control text-left"
+                           placeholder="category">
+                </div>
+                @* <div class="dropdown p-2">
+        <button class="btn btn-dark dropdown-toggle" type="button" id="categoryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Select Category
+        </button>
+        <div class="dropdown-menu" aria-labelledby="categoryDropdown" value="@_itemModel.Category">
+        <a @onclick="()=>UpdateCategory(" Coffee")">Coffee</a>
+        <a @onclick="()=>UpdateCategory(" Add-ons")">Add-ons</a>
+        </div>
+        </div> *@
+
+
+
+
+
+
+                @if (!string.IsNullOrEmpty(_editItemErrorMessage))
+                {
+                    <AlertMessage Type="danger" Message="@_editItemErrorMessage" />
+                }
+            </ModalDialog>
+        }
+
+        @if (_showDeleteItemDialog)
+        {
+            <ModalDialog Title="Delete Item" OnClose="@OnDeleteItemDialogClose" OkLabel="Confirm">
+                <p>Are you sure you want to delete <strong>@_deleteItem.ItemName</strong> item?</p>
+                @if (!string.IsNullOrEmpty(_deleteItemErrorMessage))
+                {
+                    <AlertMessage Type="danger" Message="@_deleteItemErrorMessage" />
+                }
+            </ModalDialog>
+        }
+    </div>
+}
+else
+{
+    IEnumerable<CoffeeItems> itemList = _items;
+
+
+
+    <button class="btn btn-success" type="button"
+            @onclick="OpenOrderItemDialog">
+        <span class="oi oi-pencil" /> Take Order
+    </button>
+
+
+
+    @if (_showOrderItemDialog)
+    {
+        <ModalDialog Title="@_dialogTitle" OnClose="@OnOrderItemDialogClose" OkLabel="@_dialogOkLabel">
+
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="item">Select the Coffee:</label>
+                        <select class="form-control" id="item" @bind="selectedCoffee">
+                            @foreach (var CoffeeItems in itemList.Where(CoffeeItems => CoffeeItems.Category =="Coffee"))
+                            {
+                                <option value="@CoffeeItems.ItemName">@CoffeeItems.ItemName</option>
+                            }
+                        </select>
+                    </div>
+
+                    @* <div class="form-group">
+                        @foreach (var CoffeeItem in itemList.Where(CoffeeItem => CoffeeItem.ItemName==selectedCoffee))
+                        {
+                           
+                            @* <label for="qty">Unit price: @CoffeeItem.ItemPrice  </label> *@
+                           @*  <label for="UnitPrice">Unit price:</label>
+                            <input id="unit-price" type="number" min='1'
+                                   class="form-control text-left"
+                                   readonly value="@CoffeeItem.ItemPrice"   />
+                        
+                }
+
+                    </div> *@
+                    <div class="form-group">
+                        @if (!string.IsNullOrEmpty(selectedCoffee))
+                        {
+                            var selectedCoffeeItem = itemList.FirstOrDefault(item => item.ItemName == selectedCoffee);
+
+                            @if (selectedCoffeeItem != null)
+                            {
+                                <label for="UnitPrice">Unit price:</label>
+                                <input id="unit-price" type="number" min='1'
+                                       class="form-control text-left"
+                                       readonly value="@selectedCoffeeItem.ItemPrice" />
+
+                                
+                            }
+                            else
+                            {
+                                <p>No coffee item found with the selected name.</p>
+                            }
+
+                            
+                        }
+                    </div>
+
+
+
+
+
+
+                    <div class="form-group">
+                        <label for="item">Select the Add-ons:</label>
+                        <select class="form-control" id="item" @bind="selectedAddons">
+                            @foreach (var CoffeeItems in itemList.Where(CoffeeItems => CoffeeItems.Category =="Add-ons"))
+                            {
+                                <option value="@CoffeeItems.ItemName">@CoffeeItems.ItemName</option>
+
+                                
+                            }
+                            
+                            
+                           
+                          
+
+                        </select>
+
+                    </div>
+                    <div class="form-group ">
+                        @foreach (var CoffeeItem in itemList.Where(CoffeeItem => CoffeeItem.ItemName==selectedAddons))
+                        {
+                            @* <label for="qty">Unit price: @CoffeeItem.ItemPrice  </label> *@
+                            <label for="UnitPrice2">Unit price:</label>
+                            <input id="unit-price" type="number" min='1'
+                                   placeholder="" class="form-control text-left"
+                                   readonly value="@CoffeeItem.ItemPrice" />
+
+
+                                     
+               
+                        }
+
+                       
+                        
+                        
+                       
+
+
+                    </div>
+                    <div class="form-group">
+                        <label for="item">UserName/PhoneNUmber:</label>
+                       <input class="identification" type="text" @bind="selectedIdentity"/>
+
+
+
+
+
+                        
+
+                </div>
+                </div>
+
+
+                @* Right side of the take order section  *@
+
+
+            <div class="col-md-6 ">
+                <div class="pt-11">
+                    
+
+                    <div>
+                        <p>Selected Coffee: @selectedCoffee</p>
+                        @* <p> Coffee price: @coffeeItem.ItemPrice * @selectedQty</p> *@
+                        <p>Selected Addons: @selectedAddons</p>
+                        @* <p> Coffee price: @coffeeItem.ItemPrice * @selectedQty</p> *@
+                        @* <p>Item Price: $@coffeeItem.ItemPrice</p> *@
+
+                        
+                        <p>Total Amount: @selectedCoffeePrice </p>
+                    </div>
+
+
+
+                </div>
+                </div>
+
+            </div>
+
+
+
+
+            @* <div class="dropdown p-2">
+    <button class="btn btn-dark dropdown-toggle" type="button" id="categoryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Select Category
+    </button>
+    <div class="dropdown-menu" aria-labelledby="categoryDropdown" value="@_itemModel.Category">
+    <a @onclick="()=>UpdateCategory(" Coffee")">Coffee</a>
+    <a @onclick="()=>UpdateCategory(" Add-ons")">Add-ons</a>
+    </div>
+    </div> *@
+
+
+
+
+
+
+            @if (!string.IsNullOrEmpty(_editItemErrorMessage))
+            {
+                <AlertMessage Type="danger" Message="@_editItemErrorMessage" />
+            }
+        </ModalDialog>
+    }
+}
+
+
+@code {
+    [CascadingParameter]
+    private GlobalState _globalState { get; set; }
+    private bool _showEditItemDialog { get; set; }
+    private bool _showOrderItemDialog { get; set; } /* = false; */
+    private bool _showDeleteItemDialog { get; set; }
+    private List<CoffeeItems> _items { get; set; }
+    private List<CoffeeTaken> _orderedC { get; set; }
+    private CoffeeItems _deleteItem { get; set; }
+    private string _dialogTitle { get; set; }
+    private string _dialogOkLabel { get; set; }
+    private string _editItemErrorMessage { get; set; }
+    private string _orderItemErrorMessage { get; set; }
+    private string _deleteItemErrorMessage { get; set; }
+    private CoffeeItems _itemModel { get; set; }
+    private CoffeeTaken _orderModel { get; set; }
+    private string _tabFilter = "All";
+    private string _sortBy = "despcription";
+    private string _sortDirection = "ascending";
+    private string selectedCoffee { get; set; }
+    private string selectedAddons { get; set; }
+    private int selectedQty { get; set; }
+    private int unitPrice { get; set; }
+    public int selectedCoffeePrice { get; set; } = 0;
+    // private int TotalAmount { get; set; }
+    protected Boolean isOutOfStock { get; set; } = false;
+    private string selectedIdentity { get; set; }
+
+
+    private string selectedQtyS => selectedQty.ToString();
+    private string TotalAmount => CalculateTotalAmount.ToString();
+
+    private int CalculateTotalAmount => 5 * selectedQty;
+
+    protected override void OnInitialized()
+    {
+        _items = CoffeeItemService.GetAll();
+    }
+
+
+
+
+
+
+
+    private void HandleOutOfStock(CoffeeItems coffeeItem)
+    {
+        coffeeItem.isOutOfStock = !coffeeItem.isOutOfStock;
+    }
+
+
+
+    private void SortByHandler(string sortByName)
+    {
+        if (_sortBy == sortByName)
+        {
+            _sortDirection = _sortDirection == "ascending" ? "descending" : "ascending";
+        }
+        else
+        {
+            _sortBy = sortByName;
+            _sortDirection = "ascending";
+        }
+    }
+
+    private void OpenAddItemDialog()
+    {
+        _dialogTitle = "Add Coffee Item";
+        _dialogOkLabel = "Add";
+        _itemModel = new CoffeeItems();
+        _itemModel.Id = Guid.Empty;
+        _showEditItemDialog = true;
+    }
+
+
+
+    private void OpenOrderItemDialog()
+    {
+        _dialogTitle = "Add Order Item";
+        _dialogOkLabel = "Take Order";
+        _orderModel = new CoffeeTaken();
+        _orderModel.Id = Guid.Empty;
+        _showOrderItemDialog = true;
+    }
+
+    private void SearchItemName(ChangeEventArgs e)
+    {
+        var searchTerm = e.Value.ToString();
+        if (!string.IsNullOrEmpty(searchTerm) && searchTerm.Length > 2)
+        {
+            _items = CoffeeItemService.GetAll().Where(t =>
+            t.ItemName.ToLower().Contains(searchTerm.ToLower())).ToList();
+        }
+        else
+        {
+            _items = CoffeeItemService.GetAll();
+        }
+    }
+
+    private void OpenEditItemDialog(CoffeeItems editItem)
+    {
+        _dialogTitle = "Edit Item";
+        _dialogOkLabel = "Save";
+
+        _itemModel = editItem;
+
+        _showEditItemDialog = true;
+    }
+
+
+    private void OpenDeleteItemDialog(CoffeeItems InventoryItem)
+    {
+        _deleteItem = InventoryItem;
+        _showDeleteItemDialog = true;
+    }
+
+    private void updateItemPrice(ChangeEventArgs e)
+    {
+        // if (_itemModel.ItemPrice > int.Parse(e.Value.ToString()))
+        // {
+        //     int decQ = _itemModel.ItemPrice - int.Parse(e.Value.ToString());
+        //     CoffeeTakenService.Create(_itemModel.ItemName, decQ, _globalState.ActiveUser.Id, _globalState.ActiveUser.Roles == Roles.Admin ? _globalState.ActiveUser.Id : Guid.Empty);
+        // }
+        if (_globalState.ActiveUser.Roles == Roles.Admin)
+        {
+            _itemModel.ItemPrice = int.Parse(e.Value.ToString());
+        }
+
+    }
+
+    // private void updateCategory(ChangeEventArgs e)
+    // {
+    //     if (_itemModel.Category > int.Parse(e.Value.ToString()))
+    //     {
+    //         int decQ = _itemModel.ItemPrice - int.Parse(e.Value.ToString());
+    //         CoffeeTakenService.Create(_itemModel.ItemName, decQ, _globalState.ActiveUser.Id, _globalState.ActiveUser.Roles == Roles.Admin ? _globalState.ActiveUser.Id : Guid.Empty);
+    //     }
+    //     if (_globalState.ActiveUser.Roles == Roles.Admin)
+    //     {
+    //         _itemModel.ItemPrice = int.Parse(e.Value.ToString());
+    //     }
+
+    private void UpdateCategory(ChangeEventArgs e)
+    {
+        if (_globalState.ActiveUser.Roles == Roles.Admin)
+        {
+            // Assuming _itemModel.Category is a string property
+            _itemModel.Category = e.Value.ToString();
+
+
+        }
+    }
+
+
+    private void OnEditItemDialogClose(bool isCancel)
+    {
+        Guid approvedBy = Guid.Empty;
+        if (isCancel)
+        {
+            _showEditItemDialog = false;
+        }
+        else
+        {
+            try
+            {
+                _editItemErrorMessage = "";
+
+                if (_globalState.ActiveUser.Roles == Roles.Admin)
+                {
+                    approvedBy = _globalState.ActiveUser.Id;
+                }
+
+                if (_itemModel.Id == Guid.Empty)
+                {
+                    _items = CoffeeItemService.Create(_globalState.ActiveUser.Id, _itemModel.ItemName, _itemModel.Description, _itemModel.Category, _itemModel.Quantity, _itemModel.ItemPrice, approvedBy);
+                }
+                else
+                {
+                    _items = CoffeeItemService.Update(_itemModel.Id, _itemModel.ItemName, _itemModel.Description, _itemModel.Category, _itemModel.Quantity, _itemModel.ItemPrice, approvedBy);
+                }
+                _showEditItemDialog = false;
+            }
+            catch (Exception e)
+            {
+                _editItemErrorMessage = e.Message;
+            }
+        }
+    }
+
+    private void UpdateOrderModel()
+    {
+        _orderModel.ItemName = selectedCoffee + " with " + selectedAddons;
+        // You can now use _orderModel.ItemName for further processing
+        // For example: CoffeeTakenService.Create(_orderModel.ItemName, _orderModel.Quantity, _orderModel.ItemPrice);
+    }
+
+
+    private void OnOrderItemDialogClose(bool isCancel)
+    {
+        // Guid approvedBy = Guid.Empty;
+        if (isCancel)
+        {
+            _showOrderItemDialog = false;
+        }
+        else
+        {
+            try
+            {
+                _editItemErrorMessage = "";
+
+                // if (_globalState.ActiveUser.Roles == Roles.Admin)
+                // {
+                //     approvedBy = _globalState.ActiveUser.Id;
+                // }
+                if (selectedAddons !=null && selectedCoffee !=null)
+                {
+                    UpdateOrderModel();
+                }
+
+                _orderedC = CoffeeTakenService.Create(_orderModel.ItemName, _orderModel.TotalAmount,  _orderModel.TakenBy);
+
+
+                _showOrderItemDialog = false;
+            }
+            catch (Exception e)
+            {
+                _editItemErrorMessage = e.Message;
+            }
+        }
+    }
+
+
+
+    private void OnDeleteItemDialogClose(bool isCancel)
+    {
+        if (isCancel)
+        {
+
+            _showDeleteItemDialog = false;
+            _deleteItem = null;
+        }
+        else
+        {
+            try
+            {
+                _deleteItemErrorMessage = "";
+                _items = CoffeeItemService.Delete(_deleteItem.Id);
+                _showDeleteItemDialog = false;
+                _deleteItem = null;
+            }
+            catch (Exception e)
+            {
+                _deleteItemErrorMessage = e.Message;
+            }
+        }
+    }
+    private void TabFilter(string status)
+    {
+        _tabFilter = status;
+    }
+
+}

@@ -1,0 +1,25 @@
+﻿<!-- CoffeeCard.razor -->
+
+@using BisleriumCafe.Data
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">$@coffees.ItemName</h5>
+        <p class="card-text">Price: $@coffees.ItemPrice</p>
+        <button class="btn btn-primary" @* @onclick="()=>AddToCart(Coffee)" *@>Add to Cart</button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public CoffeeItems coffees { get; set; }
+
+    [Parameter]
+    public EventCallback<CoffeeItems> OnAddToCart { get; set; }
+
+    private async Task AddToCart(CoffeeItems coffee)
+    {
+        await OnAddToCart.InvokeAsync(coffee);
+    }
+}
+

@@ -1,0 +1,226 @@
+﻿@page "/coffeeTaken"
+@using BisleriumCafe.Data
+@using BisleriumCafe.Shared
+
+<div class="body">
+<nav class="navbar navbar bg justify-content-between">
+    <h1 class="navbar-brand mb-0 h1">Orders</h1>
+    <div class="d-flex">
+        <input type="search" class="form-control search" placeholder="Search" @oninput="SearchItemName" />
+        <a class='btn text-@(_sortBy == "ItemName" ? "primary" : "secondary")'
+           @onclick='()=>SortByHandler("ItemName")'>
+
+        </a>
+    </div>
+</nav>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                <div class="d-flex">
+                    CoffeeItem
+                    <a class='btn text-@(_sortBy == "ItemName" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
+                       @onclick='()=>SortByHandler("ItemName")'>
+                        <span class='oi oi-sort-@(_sortBy == "ItemName" ? _sortDirection : "ascending")' />
+                    </a>
+                </div>
+            </th>
+
+            <th>
+                <div class="d-flex">
+                    Total Price
+                    <a class='btn text-@(_sortBy == "quantity" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
+                       @onclick='()=>SortByHandler("quantity")'>
+                        <span class='oi oi-sort-@(_sortBy == "quantity" ? _sortDirection : "ascending")' />
+                    </a>
+                </div>
+            </th>
+            <th>
+                <div class="d-flex">
+                    Taken By
+                    <a class='btn text-@(_sortBy == "takenBy" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
+                       @onclick='()=>SortByHandler("takenBy")'>
+                        <span class='oi oi-sort-@(_sortBy == "takenBy" ? _sortDirection : "ascending")' />
+                    </a>
+                </div>
+            </th>
+                <th>
+                    <div class="d-flex">
+                        Taken At
+                        <a class='btn text-@(_sortBy == "takenBy" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
+                           @onclick='()=>SortByHandler("takenAt")'>
+                            <span class='oi oi-sort-@(_sortBy == "takenAt" ? _sortDirection : "ascending")' />
+                        </a>
+                    </div>
+                </th>
+
+                <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            IEnumerable<CoffeeTaken> itemList = _items;
+
+            if (_sortBy == "ItemName")
+            {
+                itemList = _sortDirection == "ascending" ? itemList.OrderBy(t => t.ItemName) : itemList.OrderByDescending(t =>
+                t.ItemName);
+            }
+
+            else if (_sortBy == "quantity")
+            {
+                itemList = _sortDirection == "ascending" ? itemList.OrderBy(t => t.Quantity) : itemList.OrderByDescending(t =>
+                t.Quantity);
+            }
+            else if (_sortBy == "takenBy")
+            {
+                itemList = _sortDirection == "ascending" ? itemList.OrderBy(t => t.TakenBy) : itemList.OrderByDescending(t =>
+                t.TakenBy);
+            }
+            
+
+
+
+            foreach (var CoffeeTaken in itemList)
+            {
+                <tr>
+
+                    <td>@CoffeeTaken.ItemName</td>
+
+                    <td>
+                        @CoffeeTaken.TotalAmount
+                    </td>
+                    <td>
+                            @CoffeeTaken.TakenBy
+                    </td>
+                    @CoffeeTaken.TakenAt
+                    <td>
+
+                        @if (_globalState.ActiveUser.Roles == Roles.Admin)
+                        {
+                            <button class="btn btn-dark" type="button" @onclick="()=>OpenDeleteItemDialog(CoffeeTaken)">
+                                <span class="oi oi-delete" /> Delete
+                            </button>
+                            // @if (inventoryTaken.ApprovedBy == Guid.Empty)
+                            // {
+                            //     <button class="btn btn-success" type="button" @onclick="()=>ApproveItem(inventoryTaken)">
+                            //         <span class="oi oi-delete" /> Approve
+                            //     </button>
+                            // }
+
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@if (_showDeleteItemDialog)
+{
+    <ModalDialog Title="Delete Item" OnClose="@OnDeleteItemDialogClose" OkLabel="Confirm">
+        <p>Are you sure you want to delete <strong>@_deleteItem.ItemName</strong> item?</p>
+        @if (!string.IsNullOrEmpty(_deleteItemErrorMessage))
+        {
+            <AlertMessage Type="danger" Message="@_deleteItemErrorMessage" />
+        }
+    </ModalDialog>
+    
+}
+</div>
+<div class="hello">
+    <BarDiagram></BarDiagram>
+</div>
+@code {
+    [CascadingParameter]
+    private GlobalState _globalState { get; set; }
+    private bool _showEditItemDialog { get; set; }
+    private bool _showDeleteItemDialog { get; set; }
+    private List<CoffeeTaken> _items { get; set; }
+    private CoffeeTaken _deleteItem { get; set; }
+    private string _dialogTitle { get; set; }
+    private string _dialogOkLabel { get; set; }
+    private string _editItemErrorMessage { get; set; }
+    private string _deleteItemErrorMessage { get; set; }
+    private CoffeeTaken _itemModel { get; set; }
+    private string _sortBy = "despcription";
+    private string _sortDirection = "ascending";
+
+    protected override void OnInitialized()
+    {
+        _items = CoffeeTakenService.GetAll();
+    }
+
+    private void SortByHandler(string sortByName)
+    {
+        if (_sortBy == sortByName)
+        {
+            _sortDirection = _sortDirection == "ascending" ? "descending" : "ascending";
+        }
+        else
+        {
+            _sortBy = sortByName;
+            _sortDirection = "ascending";
+        }
+    }
+
+
+
+    private void SearchItemName(ChangeEventArgs e)
+    {
+        var searchTerm = e.Value.ToString();
+        if (!string.IsNullOrEmpty(searchTerm) && searchTerm.Length > 2)
+        {
+            _items = CoffeeTakenService.GetAll().Where(t =>
+            t.ItemName.ToLower().Contains(searchTerm.ToLower())).ToList();
+        }
+        else
+        {
+            _items = CoffeeTakenService.GetAll();
+        }
+    }
+
+    private void OpenDeleteItemDialog(CoffeeTaken Coffeetaken)
+    {
+        _deleteItem = Coffeetaken;
+        _showDeleteItemDialog = true;
+    }
+
+    private void OnDeleteItemDialogClose(bool isCancel)
+    {
+        if (isCancel)
+        {
+
+            _showDeleteItemDialog = false;
+            _deleteItem = null;
+        }
+        else
+        {
+            try
+            {
+                _deleteItemErrorMessage = "";
+                _items = CoffeeTakenService.Delete(_deleteItem.Id);
+                _showDeleteItemDialog = false;
+                _deleteItem = null;
+            }
+            catch (Exception e)
+            {
+                _deleteItemErrorMessage = e.Message;
+            }
+        }
+    }
+
+
+
+    // private void ApproveItem(CoffeeTaken approvedItem)
+    // {
+    //     _itemModel = approvedItem;
+    //     CoffeeTakenService.Approve(_itemModel.Id, _globalState.ActiveUser.Id);
+    //     CoffeeItemService.updatePriceByName(_itemModel.ItemName, _itemModel.Quantity);
+    //     NavManager.NavigateTo("/inventory_takens");
+
+    // }
+
+
+}
