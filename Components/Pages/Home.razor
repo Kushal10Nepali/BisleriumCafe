@@ -262,7 +262,7 @@
 else
 {
     IEnumerable<CoffeeItems> itemList = _items;
-
+    IEnumerable<Member> memberList = _members;
 
 
     <button class="btn btn-success" type="button"
@@ -274,6 +274,8 @@ else
 
     @if (_showOrderItemDialog)
     {
+
+       
         <ModalDialog Title="@_dialogTitle" OnClose="@OnOrderItemDialogClose" OkLabel="@_dialogOkLabel">
 
 
@@ -290,18 +292,20 @@ else
                     </div>
 
                     @* <div class="form-group">
-                        @foreach (var CoffeeItem in itemList.Where(CoffeeItem => CoffeeItem.ItemName==selectedCoffee))
-                        {
-                           
-                            @* <label for="qty">Unit price: @CoffeeItem.ItemPrice  </label> *@
-                           @*  <label for="UnitPrice">Unit price:</label>
-                            <input id="unit-price" type="number" min='1'
-                                   class="form-control text-left"
-                                   readonly value="@CoffeeItem.ItemPrice"   />
-                        
-                }
+            @foreach (var CoffeeItem in itemList.Where(CoffeeItem => CoffeeItem.ItemName==selectedCoffee))
+            {
 
-                    </div> *@
+            @* <label for="qty">Unit price: @CoffeeItem.ItemPrice  </label> *@
+                    @*  <label for="UnitPrice">Unit price:</label>
+            <input id="unit-price" type="number" min='1'
+            class="form-control text-left"
+            readonly value="@CoffeeItem.ItemPrice"   />
+
+            }
+
+            </div> *@
+
+              
                     <div class="form-group">
                         @if (!string.IsNullOrEmpty(selectedCoffee))
                         {
@@ -314,7 +318,7 @@ else
                                        class="form-control text-left"
                                        readonly value="@selectedCoffeeItem.ItemPrice" />
 
-                                
+
                             }
                             else
                             {
@@ -322,6 +326,7 @@ else
                             }
 
                             
+
                         }
                     </div>
 
@@ -337,72 +342,141 @@ else
                             {
                                 <option value="@CoffeeItems.ItemName">@CoffeeItems.ItemName</option>
 
-                                
+
                             }
-                            
-                            
-                           
-                          
+
+
+
+
 
                         </select>
 
                     </div>
                     <div class="form-group ">
+
+                   
                         @foreach (var CoffeeItem in itemList.Where(CoffeeItem => CoffeeItem.ItemName==selectedAddons))
                         {
                             @* <label for="qty">Unit price: @CoffeeItem.ItemPrice  </label> *@
                             <label for="UnitPrice2">Unit price:</label>
                             <input id="unit-price" type="number" min='1'
-                                   placeholder="" class="form-control text-left"
+                                   class="form-control text-left"
                                    readonly value="@CoffeeItem.ItemPrice" />
 
+                            
 
-                                     
-               
                         }
 
-                       
-                        
-                        
-                       
+
+
+
+
 
 
                     </div>
                     <div class="form-group">
-                        <label for="item">UserName/PhoneNUmber:</label>
-                       <input class="identification" type="text" @bind="selectedIdentity"/>
+                        <label for="Membership status">Selecte Membership status:</label>
+                        <select  class="form-control" id="membershipStatus" @bind="selectedMembershipStatus">
+                            <option value="NotMember" default>Not Member</option>
+                            <option value="Member">Member</option>
+                        </select>
+
+                        @if (selectedMembershipStatus == "Member")
+                        {
+                            <div class="form-group">
+                                <label for="memberId">Enter Member ID:</label>
+                                <input class="form-control" id="memberId" @bind="memberId"/>
+                            </div>
+                            @* <button class="btn btn-primary" @onclick="ShowMemberDialog">Save Member ID</button> *@
+
+                        }
 
 
 
+                        else
+                        {
+                            memberId = "";
+
+                        }
 
 
-                        
 
-                </div>
+                     
+
+
+
+                    </div>
                 </div>
 
 
                 @* Right side of the take order section  *@
 
 
-            <div class="col-md-6 ">
-                <div class="pt-11">
-                    
+                <div class="col-md-6 ">
+                    <div class="pt-11">
 
-                    <div>
-                        <p>Selected Coffee: @selectedCoffee</p>
-                        @* <p> Coffee price: @coffeeItem.ItemPrice * @selectedQty</p> *@
-                        <p>Selected Addons: @selectedAddons</p>
-                        @* <p> Coffee price: @coffeeItem.ItemPrice * @selectedQty</p> *@
-                        @* <p>Item Price: $@coffeeItem.ItemPrice</p> *@
 
+                        <div>
+                            <p>Selected Coffee: @selectedCoffee</p>
+                            @* <p> Coffee price: @coffeeItem.ItemPrice * @selectedQty</p> *@
+                            <p>Selected Addons: @selectedAddons</p>
+                            @* <p> Coffee price: @coffeeItem.ItemPrice * @selectedQty</p> *@
+                            @* <p>Item Price: $@coffeeItem.ItemPrice</p> *@
+
+
+                            <p>
+                           @*      @code
+                                {
+                                         int selectedAddonsPrice = 0;
+                                             int selectedCoffeePrice = 0;
+
+                        } *@
+
+                        Total Amount:
+                                @code
+                                {
+        int selectedAddonsPrice = 0;
+        int selectedCoffeePrice = 0;
+                        }
                         
-                        <p>Total Amount: @selectedCoffeePrice </p>
+                        @foreach (var CoffeeItem in itemList.Where(CoffeeItem => CoffeeItem.ItemName==selectedAddons))
+                                {
+
+
+                                    @* <input id="unit-price" type="number" min='1'
+                                           class="form-control text-left"
+                                    readonly value="@CoffeeItem.ItemPrice" /> *@
+
+                                    selectedAddonsPrice = @CoffeeItem.ItemPrice;
+                                }
+
+                                @foreach (var CoffeeItem in itemList.Where(CoffeeItem => CoffeeItem.ItemName==selectedCoffee))
+                                {
+                                    @* <label for="qty">Unit price: @CoffeeItem.ItemPrice  </label> *@
+@* 
+                                    <input id="unit-price" type="number" min='1'
+                                           class="form-control text-left"
+                                    readonly value="@CoffeeItem.ItemPrice" /> *@
+                                    selectedCoffeePrice = @CoffeeItem.ItemPrice;
+                                }
+
+                                   
+
+                                
+                            </p>
+                          
+                            <p>
+                                
+                                Coffee Price: @selectedCoffeePrice <br />
+                                Addons Price: @selectedAddonsPrice <br />
+                              
+                                Total Amount: @(selectedAddonsPrice + selectedCoffeePrice)
+                            </p>
+                        </div>
+
+
+
                     </div>
-
-
-
-                </div>
                 </div>
 
             </div>
@@ -440,7 +514,9 @@ else
     private bool _showEditItemDialog { get; set; }
     private bool _showOrderItemDialog { get; set; } /* = false; */
     private bool _showDeleteItemDialog { get; set; }
+    private bool _showMemberIdDialog { get; set; } = false;
     private List<CoffeeItems> _items { get; set; }
+    private List<Member> _members { get; set; }
     private List<CoffeeTaken> _orderedC { get; set; }
     private CoffeeItems _deleteItem { get; set; }
     private string _dialogTitle { get; set; }
@@ -455,18 +531,21 @@ else
     private string _sortDirection = "ascending";
     private string selectedCoffee { get; set; }
     private string selectedAddons { get; set; }
+    private string selectedMembershipStatus { get; set; } ="NotMember";
+    private string memberId { get; set; }
+    private bool isMember { get; set; }
     private int selectedQty { get; set; }
     private int unitPrice { get; set; }
-    public int selectedCoffeePrice { get; set; } = 0;
+    // public int selectedCoffeePrice { get; set; } = 0;
     // private int TotalAmount { get; set; }
     protected Boolean isOutOfStock { get; set; } = false;
     private string selectedIdentity { get; set; }
 
 
     private string selectedQtyS => selectedQty.ToString();
-    private string TotalAmount => CalculateTotalAmount.ToString();
+    // private string TotalAmount => CalculateTotalAmount.ToString();
 
-    private int CalculateTotalAmount => 5 * selectedQty;
+    // private int CalculateTotalAmount => 5 * selectedQty;
 
     protected override void OnInitialized()
     {
@@ -518,6 +597,7 @@ else
         _orderModel.Id = Guid.Empty;
         _showOrderItemDialog = true;
     }
+
 
     private void SearchItemName(ChangeEventArgs e)
     {
@@ -588,6 +668,8 @@ else
     }
 
 
+
+
     private void OnEditItemDialogClose(bool isCancel)
     {
         Guid approvedBy = Guid.Empty;
@@ -626,9 +708,13 @@ else
     private void UpdateOrderModel()
     {
         _orderModel.ItemName = selectedCoffee + " with " + selectedAddons;
-        // You can now use _orderModel.ItemName for further processing
-        // For example: CoffeeTakenService.Create(_orderModel.ItemName, _orderModel.Quantity, _orderModel.ItemPrice);
+        _orderModel.TotalAmount = selectedAddonsPrice + selectedCoffeePrice;
+        // _orderModel.TakenBy = memberId;
     }
+
+
+
+   
 
 
     private void OnOrderItemDialogClose(bool isCancel)
@@ -651,9 +737,10 @@ else
                 if (selectedAddons !=null && selectedCoffee !=null)
                 {
                     UpdateOrderModel();
+                   
                 }
 
-                _orderedC = CoffeeTakenService.Create(_orderModel.ItemName, _orderModel.TotalAmount,  _orderModel.TakenBy);
+                _orderedC = CoffeeTakenService.Create(_orderModel.ItemName, _orderModel.TotalAmount, _orderModel.TakenBy);
 
 
                 _showOrderItemDialog = false;

@@ -37,14 +37,14 @@ namespace BisleriumCafe.Data
                 return JsonSerializer.Deserialize<List<CoffeeTaken>>(json);
             }
 
-            public static List<CoffeeTaken> Create(string itemName,  int totalamount ,Guid takenBy)
+            public static List<CoffeeTaken> Create( string itemName,  int totalamount , string takenBy  )
             {
 
                 List<CoffeeTaken> items = GetAll();
                 items.Add(new CoffeeTaken
                 {
                     ItemName = itemName,
-                    TakenAt = DateTime.Today,
+                    TakenAt = DateTime.Now,
                     TakenBy = takenBy,
                     //Quantity = qty,
                     TotalAmount = totalamount,
