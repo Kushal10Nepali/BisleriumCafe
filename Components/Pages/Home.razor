@@ -262,7 +262,7 @@
 else
 {
     IEnumerable<CoffeeItems> itemList = _items;
-    IEnumerable<Member> memberList = _members;
+    @* IEnumerable<Member> memberList = _members; *@
 
 
     <button class="btn btn-success" type="button"
@@ -276,7 +276,7 @@ else
     {
 
        
-        <ModalDialog Title="@_dialogTitle" OnClose="@OnOrderItemDialogClose" OkLabel="@_dialogOkLabel">
+        <ModalDialog Title="@_dialogTitle" OnClose="@OpenIsMemberDialog" OkLabel="@_dialogOkLabel">
 
 
             <div class="row">
@@ -374,7 +374,7 @@ else
 
 
                     </div>
-                    <div class="form-group">
+                 @*    <div class="form-group">
                         <label for="Membership status">Selecte Membership status:</label>
                         <select  class="form-control" id="membershipStatus" @bind="selectedMembershipStatus">
                             <option value="NotMember" default>Not Member</option>
@@ -387,7 +387,7 @@ else
                                 <label for="memberId">Enter Member ID:</label>
                                 <input class="form-control" id="memberId" @bind="memberId"/>
                             </div>
-                            @* <button class="btn btn-primary" @onclick="ShowMemberDialog">Save Member ID</button> *@
+                         
 
                         }
 
@@ -405,7 +405,7 @@ else
 
 
 
-                    </div>
+                    </div> *@
                 </div>
 
 
@@ -432,7 +432,7 @@ else
 
                         } *@
 
-                        Total Amount:
+                        
                                 @code
                                 {
         int selectedAddonsPrice = 0;
@@ -470,7 +470,7 @@ else
                                 Coffee Price: @selectedCoffeePrice <br />
                                 Addons Price: @selectedAddonsPrice <br />
                               
-                                Total Amount: @(selectedAddonsPrice + selectedCoffeePrice)
+                                Order Total: @(selectedAddonsPrice + selectedCoffeePrice)
                             </p>
                         </div>
 
@@ -505,6 +505,73 @@ else
             }
         </ModalDialog>
     }
+
+    if (_showOrderSummaryDialog)
+    {
+         <ModalDialog Title="@_dialogTitle" OnClose="@OnOrderItemDialogClose" OkLabel="@_dialogOkLabel">
+            <div class="order-summary card">
+                <div class="card-body">
+                    <h5 class="card-title">Order Summary</h5>
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Coffee:</span>
+                        <span>@selectedCoffee</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Coffee Price:</span>
+                        <span>@selectedCoffeePrice</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Addons:</span>
+                        <span>@selectedAddons</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Coffee Price:</span>
+                        <span>@selectedAddonsPrice</span>
+                    </div>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between total-amount">
+                        <span>Total Amount:</span>
+                        <span>@(selectedCoffeePrice + selectedAddonsPrice)</span>
+                    </div>
+
+                    @if (isMember)
+                    {
+
+                        <div class="d-flex justify-content-between total-amount">
+                            <span>Total Amount after discount (10%):</span>
+                            <span>@((selectedCoffeePrice + selectedAddonsPrice)*0.9)</span>
+                        </div>
+                    
+                    }
+                   
+                    
+                    
+                </div>
+            </div>
+        </ModalDialog>
+    }
+
+    if (_showIsMemberDialog)
+    {
+          <ModalDialog Title="@_dialogTitle" OnClose="@OpenOrderSummaryDialog" OkLabel="@_dialogOkLabel">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="membershipDetail">Enter Membership Detail:</label>
+                    <input type="text" class="form-control" id="membershipDetail" @bind="_membershipId" />
+                </div>
+                <div>
+                    @* <button class="btn btn-success" onclick="checkMembership">Check Membership</button> *@
+                </div>
+            </div>
+          </ModalDialog>
+       
+    }
 }
 
 
@@ -514,6 +581,8 @@ else
     private bool _showEditItemDialog { get; set; }
     private bool _showOrderItemDialog { get; set; } /* = false; */
     private bool _showDeleteItemDialog { get; set; }
+    private bool _showOrderSummaryDialog { get; set; } = false ;
+    private bool _showIsMemberDialog { get; set; } = false;
     private bool _showMemberIdDialog { get; set; } = false;
     private List<CoffeeItems> _items { get; set; }
     private List<Member> _members { get; set; }
@@ -533,9 +602,13 @@ else
     private string selectedAddons { get; set; }
     private string selectedMembershipStatus { get; set; } ="NotMember";
     private string memberId { get; set; }
-    private bool isMember { get; set; }
+    private bool isMember { get; set; } = true;
     private int selectedQty { get; set; }
     private int unitPrice { get; set; }
+    private string _membershipId {get; set;}
+    // private int OrderCount { get; set; } = 0;
+    private string MembershipType { get; set; }
+
     // public int selectedCoffeePrice { get; set; } = 0;
     // private int TotalAmount { get; set; }
     protected Boolean isOutOfStock { get; set; } = false;
@@ -563,6 +636,39 @@ else
         coffeeItem.isOutOfStock = !coffeeItem.isOutOfStock;
     }
 
+    // Check Membership handler .
+
+    private void checkMembership()
+    {
+        isMember = _members.Any(member =>
+           member.Membername == _membershipId  ||
+           member.PhoneNumber == _membershipId );
+
+    }
+
+    // private void checkMembershipType()
+    // {
+    //     if (OrderCount >=15)
+    //     {
+    //         MembershipType = "Regular";
+    //     }
+    //     else
+    //     {
+    //         MembershipType = "Irregular";
+    //     }
+
+    // }
+
+    //For counting orders 
+    // private void OrderCounter ()
+    // {
+    //     // OrderCount++;
+    //     // Console.WriteLine(OrderCount);
+
+       
+          
+        
+    // }
 
 
     private void SortByHandler(string sortByName)
@@ -597,6 +703,29 @@ else
         _orderModel.Id = Guid.Empty;
         _showOrderItemDialog = true;
     }
+
+    private void OpenOrderSummaryDialog()
+    {
+        _dialogTitle = "Order Summary";
+        _dialogOkLabel = "Proceed to Payment";
+        _orderModel = new CoffeeTaken();
+        _orderModel.Id = Guid.Empty;
+        _showIsMemberDialog = false;
+        _showOrderSummaryDialog = true;
+        _orderModel.MembershipVerificationId = _membershipId;
+    }
+
+    private void OpenIsMemberDialog()
+    {
+        _dialogTitle = "If the customer is a member , fill the membership";
+        _dialogOkLabel = "Next";
+        _orderModel = new CoffeeTaken();
+        _orderModel.Id = Guid.Empty;
+        _showIsMemberDialog = true;
+    }
+
+
+
 
 
     private void SearchItemName(ChangeEventArgs e)
@@ -709,17 +838,20 @@ else
     {
         _orderModel.ItemName = selectedCoffee + " with " + selectedAddons;
         _orderModel.TotalAmount = selectedAddonsPrice + selectedCoffeePrice;
-        // _orderModel.TakenBy = memberId;
+
+
     }
 
 
 
-   
+
 
 
     private void OnOrderItemDialogClose(bool isCancel)
     {
         // Guid approvedBy = Guid.Empty;
+        _showOrderSummaryDialog = false;
+
         if (isCancel)
         {
             _showOrderItemDialog = false;
@@ -737,18 +869,21 @@ else
                 if (selectedAddons !=null && selectedCoffee !=null)
                 {
                     UpdateOrderModel();
-                   
+
                 }
 
-                _orderedC = CoffeeTakenService.Create(_orderModel.ItemName, _orderModel.TotalAmount, _orderModel.TakenBy);
+                _orderedC = CoffeeTakenService.Create(_orderModel.ItemName, _orderModel.TotalAmount, _orderModel.TakenBy , _orderModel.MembershipVerificationId);
 
 
                 _showOrderItemDialog = false;
+                // OrderCounter();
             }
             catch (Exception e)
             {
                 _editItemErrorMessage = e.Message;
             }
+
+            
         }
     }
 
@@ -769,6 +904,7 @@ else
                 _deleteItemErrorMessage = "";
                 _items = CoffeeItemService.Delete(_deleteItem.Id);
                 _showDeleteItemDialog = false;
+                // _showOrderSummary = true;
                 _deleteItem = null;
             }
             catch (Exception e)

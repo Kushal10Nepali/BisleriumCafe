@@ -29,7 +29,7 @@
 
             <th>
                 <div class="d-flex">
-                    Total Price
+                    Total Price (Rs)
                     <a class='btn text-@(_sortBy == "quantity" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
                        @onclick='()=>SortByHandler("quantity")'>
                         <span class='oi oi-sort-@(_sortBy == "quantity" ? _sortDirection : "ascending")' />
@@ -92,10 +92,13 @@
                         @CoffeeTaken.TotalAmount
                     </td>
                         <td>
-                            
+                            @CoffeeTaken.Id
                         </td>
                         <td>
                             @CoffeeTaken.TakenAt
+                        </td>
+                        <td>
+                        @CoffeeTaken.MembershipVerificationId
                         </td>
                    
                     <td>

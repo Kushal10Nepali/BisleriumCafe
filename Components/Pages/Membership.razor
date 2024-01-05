@@ -16,10 +16,12 @@
                 <th>Member Id</th>
                 <th>Membername</th
                 <th>Phone Number</th>
+                <th>Order Count</th>
                 <th>Type</th>
                 <th>Created At</th>
                 @* <th>CreatedBy</th> *@
                 <th>Actions</th>
+                
             </tr>
         </thead>
     
@@ -30,6 +32,7 @@
                 <td>@member.Id</td>
                 <td>@member.Membername</td
                 <td>@member.PhoneNumber</td>
+                <td>@member.OrderCount</td>
                 <td>@GetMembershipType(member.OrderCount)</td>
                 <td>@member.CreatedAt.ToString("MMM dd, yyyy h:mm tt")</td>
                 @* <td>
@@ -111,9 +114,9 @@
         _members = MemberService.GetAll();
     }
 
-     private string GetMembershipType(int orderCount)
+     private string GetMembershipType(int OrderCount)
     {
-        return orderCount > 15 ? "Regular" : "Irregular";
+        return OrderCount > 14 ? "Regular" : "Irregular";
     }
 
     private void OpenAddMemberDialog()

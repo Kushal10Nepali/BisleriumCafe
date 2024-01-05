@@ -16,7 +16,9 @@ namespace BisleriumCafe.Data
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public Guid CreatedBy { get; set; }
 
-        public int OrderCount { get; set; } = 0;
+        public int OrderCount { get; set; } = 17;
+
+        public int MembershipType { get; set; }
 
     }
 }

@@ -37,7 +37,7 @@ namespace BisleriumCafe.Data
                 return JsonSerializer.Deserialize<List<CoffeeTaken>>(json);
             }
 
-            public static List<CoffeeTaken> Create( string itemName,  int totalamount , string takenBy  )
+            public static List<CoffeeTaken> Create( string itemName,  int totalamount , Guid takenBy , string membershipVerficationId  )
             {
 
                 List<CoffeeTaken> items = GetAll();
@@ -49,6 +49,7 @@ namespace BisleriumCafe.Data
                     //Quantity = qty,
                     TotalAmount = totalamount,
                     //ApprovedBy = approvedBy,
+                    MembershipVerificationId = membershipVerficationId ,
                 });
                 SaveAll(items);
                 return items;

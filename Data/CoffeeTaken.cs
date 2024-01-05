@@ -18,13 +18,15 @@ namespace BisleriumCafe.Data
 
         //public String Category { get; set; }
 
-        public string TakenBy { get; set; }
+        public Guid TakenBy { get; set; }
         //public Guid ApprovedBy { get; set; }
 
         public DateTime TakenAt { get; set; } = DateTime.Now;
         public int ItemPrice { get;  set; }
 
         public int TotalAmount { get; set; }
+
+        public string  MembershipVerificationId { get; set; }
 
         
     }
