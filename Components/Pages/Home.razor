@@ -165,6 +165,11 @@
 
                                 @if (_globalState.ActiveUser.Roles == Roles.Admin)
                                 {
+                                    // <button class="btn btn-success" type="button"
+                                    //         @onclick="()=>OpenEditItemDialog(CoffeeItems)">
+                                    //     <span class="oi oi-pencil"/> Edit
+                                    // </button>
+
                                     <button class="btn btn-success" type="button"
                                             @onclick="()=>OpenEditItemDialog(CoffeeItems)">
                                         <span class="oi oi-pencil" /> Edit
@@ -200,6 +205,16 @@
                 }
             </tbody>
         </table>
+
+        @if (_showPasswordDialog)
+        {
+            <ModalDialog Title="Enter the password to make changes." OnClose="@OnPasswordDialogClose" OkLabel="Next">
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" @bind="enteredPassword" />
+                </div>
+            </ModalDialog>
+        }
 
         @if (_showEditItemDialog)
         {
@@ -247,6 +262,14 @@
             </ModalDialog>
         }
 
+        @if (_showPasswordDialog)
+        {
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" @bind="enteredPassword" />
+            </div>
+        }
+
         @if (_showDeleteItemDialog)
         {
             <ModalDialog Title="Delete Item" OnClose="@OnDeleteItemDialogClose" OkLabel="Confirm">
@@ -275,7 +298,7 @@ else
     @if (_showOrderItemDialog)
     {
 
-       
+
         <ModalDialog Title="@_dialogTitle" OnClose="@OpenIsMemberDialog" OkLabel="@_dialogOkLabel">
 
 
@@ -305,7 +328,7 @@ else
 
             </div> *@
 
-              
+
                     <div class="form-group">
                         @if (!string.IsNullOrEmpty(selectedCoffee))
                         {
@@ -325,7 +348,7 @@ else
                                 <p>No coffee item found with the selected name.</p>
                             }
 
-                            
+
 
                         }
                     </div>
@@ -335,141 +358,157 @@ else
 
 
 
+                    @*   <div class="form-group">
+            <label for="item">Select the Add-ons:</label>
+            <select  class="form-control" id="item"  @bind="selectedAddons" >
+            @foreach (var CoffeeItems in itemList.Where(CoffeeItems => CoffeeItems.Category =="Add-ons"))
+            {
+            <option value="@CoffeeItems.ItemName">@CoffeeItems.ItemName</option>
+
+
+            }
+            </select>
+
+            </div> *@
+
                     <div class="form-group">
-                        <label for="item">Select the Add-ons:</label>
-                        <select class="form-control" id="item" @bind="selectedAddons">
-                            @foreach (var CoffeeItems in itemList.Where(CoffeeItems => CoffeeItems.Category =="Add-ons"))
+                        <label for="selectedAddons">Select Add-ons:</label>
+                        <div>
+                            @foreach (var coffeeItem in itemList.Where(coffeeItem => coffeeItem.Category == "Add-ons"))
                             {
-                                <option value="@CoffeeItems.ItemName">@CoffeeItems.ItemName</option>
-
-
+                                <div>
+                                    <input type="checkbox" id="addon_@coffeeItem.ItemName" @onchange="()=>ToggleAddonSelection(coffeeItem.ItemName)" />
+                                    <label for="addon_@coffeeItem.ItemName">@coffeeItem.ItemName</label>
+                                </div>
                             }
 
 
 
 
 
-                        </select>
-
+                        </div>
                     </div>
-                    <div class="form-group ">
-
-                   
-                        @foreach (var CoffeeItem in itemList.Where(CoffeeItem => CoffeeItem.ItemName==selectedAddons))
-                        {
-                            @* <label for="qty">Unit price: @CoffeeItem.ItemPrice  </label> *@
-                            <label for="UnitPrice2">Unit price:</label>
-                            <input id="unit-price" type="number" min='1'
-                                   class="form-control text-left"
-                                   readonly value="@CoffeeItem.ItemPrice" />
-
-                            
-
-                        }
 
 
 
 
+                    @*  @foreach (var CoffeeItem in itemList.Where(CoffeeItem => CoffeeItem.ItemName==selectedAddons))
+            {
+
+            <label for="UnitPrice2">Unit price:</label>
+            <input id="unit-price" type="number" min='1'
+            class="form-control text-left"
+            readonly value="@CoffeeItem.ItemPrice" />
 
 
 
-                    </div>
-                 @*    <div class="form-group">
-                        <label for="Membership status">Selecte Membership status:</label>
-                        <select  class="form-control" id="membershipStatus" @bind="selectedMembershipStatus">
-                            <option value="NotMember" default>Not Member</option>
-                            <option value="Member">Member</option>
-                        </select>
-
-                        @if (selectedMembershipStatus == "Member")
-                        {
-                            <div class="form-group">
-                                <label for="memberId">Enter Member ID:</label>
-                                <input class="form-control" id="memberId" @bind="memberId"/>
-                            </div>
-                         
-
-                        }
+            }
 
 
 
-                        else
-                        {
-                            memberId = "";
-
-                        }
 
 
 
-                     
+
+            </div>
+            @*    <div class="form-group">
+            <label for="Membership status">Selecte Membership status:</label>
+            <select  class="form-control" id="membershipStatus" @bind="selectedMembershipStatus">
+            <option value="NotMember" default>Not Member</option>
+            <option value="Member">Member</option>
+            </select>
+
+            @if (selectedMembershipStatus == "Member")
+            {
+            <div class="form-group">
+            <label for="memberId">Enter Member ID:</label>
+            <input class="form-control" id="memberId" @bind="memberId"/>
+            </div>
+
+
+            }
 
 
 
-                    </div> *@
+            else
+            {
+            memberId = "";
+
+            }
+
+
+
+
+
+
+
+            </div> *@
+
                 </div>
 
-
+                
+                   
+                
                 @* Right side of the take order section  *@
 
 
                 <div class="col-md-6 ">
                     <div class="pt-11">
-
-
                         <div>
                             <p>Selected Coffee: @selectedCoffee</p>
                             @* <p> Coffee price: @coffeeItem.ItemPrice * @selectedQty</p> *@
-                            <p>Selected Addons: @selectedAddons</p>
+                            <p>
+                                Selected Addons:
+                                <ul>
+                                    @foreach (var addon in selectedAddons)
+                                    {
+                                        <li>@addon</li>
+                                    }
+                                </ul>
+                            </p>
                             @* <p> Coffee price: @coffeeItem.ItemPrice * @selectedQty</p> *@
                             @* <p>Item Price: $@coffeeItem.ItemPrice</p> *@
 
 
                             <p>
-                           @*      @code
-                                {
-                                         int selectedAddonsPrice = 0;
-                                             int selectedCoffeePrice = 0;
 
-                        } *@
 
-                        
+
                                 @code
                                 {
-        int selectedAddonsPrice = 0;
-        int selectedCoffeePrice = 0;
+                                    int selectedAddonsPrice = 0;
+                                    int selectedCoffeePrice = 0;
                         }
-                        
-                        @foreach (var CoffeeItem in itemList.Where(CoffeeItem => CoffeeItem.ItemName==selectedAddons))
+
+                        @* @foreach (var CoffeeItem in itemList.Where(CoffeeItem => CoffeeItem.ItemName==selectedAddons))
                                 {
 
 
-                                    @* <input id="unit-price" type="number" min='1'
-                                           class="form-control text-left"
-                                    readonly value="@CoffeeItem.ItemPrice" /> *@
+
 
                                     selectedAddonsPrice = @CoffeeItem.ItemPrice;
-                                }
+                                } *@
 
                                 @foreach (var CoffeeItem in itemList.Where(CoffeeItem => CoffeeItem.ItemName==selectedCoffee))
                                 {
                                     @* <label for="qty">Unit price: @CoffeeItem.ItemPrice  </label> *@
-@* 
-                                    <input id="unit-price" type="number" min='1'
-                                           class="form-control text-left"
-                                    readonly value="@CoffeeItem.ItemPrice" /> *@
+                                    @*
+                        <input id="unit-price" type="number" min='1'
+                        class="form-control text-left"
+                        readonly value="@CoffeeItem.ItemPrice" /> *@
                                     selectedCoffeePrice = @CoffeeItem.ItemPrice;
                                 }
 
-                                   
 
-                                
+
+
                             </p>
-                          
+
                             <p>
-                                
+
                                 Coffee Price: @selectedCoffeePrice <br />
                                 Addons Price: @selectedAddonsPrice <br />
-                              
+
                                 Order Total: @(selectedAddonsPrice + selectedCoffeePrice)
                             </p>
                         </div>
@@ -483,32 +522,17 @@ else
 
 
 
-
-            @* <div class="dropdown p-2">
-    <button class="btn btn-dark dropdown-toggle" type="button" id="categoryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Select Category
-    </button>
-    <div class="dropdown-menu" aria-labelledby="categoryDropdown" value="@_itemModel.Category">
-    <a @onclick="()=>UpdateCategory(" Coffee")">Coffee</a>
-    <a @onclick="()=>UpdateCategory(" Add-ons")">Add-ons</a>
-    </div>
-    </div> *@
-
-
-
-
-
-
             @if (!string.IsNullOrEmpty(_editItemErrorMessage))
             {
                 <AlertMessage Type="danger" Message="@_editItemErrorMessage" />
             }
         </ModalDialog>
+
     }
 
     if (_showOrderSummaryDialog)
     {
-         <ModalDialog Title="@_dialogTitle" OnClose="@OnOrderItemDialogClose" OkLabel="@_dialogOkLabel">
+        <ModalDialog Title="@_dialogTitle" OnClose="@OnOrderItemDialogClose" OkLabel="@_dialogOkLabel">
             <div class="order-summary card">
                 <div class="card-body">
                     <h5 class="card-title">Order Summary</h5>
@@ -525,7 +549,7 @@ else
 
                     <div class="d-flex justify-content-between mb-3">
                         <span>Addons:</span>
-                        <span>@selectedAddons</span>
+                        <span>@string.Join(", ", selectedAddons)</span>
                     </div>
 
                     <div class="d-flex justify-content-between mb-3">
@@ -547,11 +571,11 @@ else
                             <span>Total Amount after discount (10%):</span>
                             <span>@((selectedCoffeePrice + selectedAddonsPrice)*0.9)</span>
                         </div>
-                    
+
                     }
-                   
-                    
-                    
+
+
+
                 </div>
             </div>
         </ModalDialog>
@@ -559,7 +583,7 @@ else
 
     if (_showIsMemberDialog)
     {
-          <ModalDialog Title="@_dialogTitle" OnClose="@OpenOrderSummaryDialog" OkLabel="@_dialogOkLabel">
+        <ModalDialog Title="@_dialogTitle" OnClose="@OpenOrderSummaryDialog" OkLabel="@_dialogOkLabel">
             <div class="modal-body">
                 <div class="form-group">
                     <label for="membershipDetail">Enter Membership Detail:</label>
@@ -569,8 +593,8 @@ else
                     @* <button class="btn btn-success" onclick="checkMembership">Check Membership</button> *@
                 </div>
             </div>
-          </ModalDialog>
-       
+        </ModalDialog>
+
     }
 }
 
@@ -578,10 +602,11 @@ else
 @code {
     [CascadingParameter]
     private GlobalState _globalState { get; set; }
-    private bool _showEditItemDialog { get; set; }
+    private bool _showEditItemDialog { get; set; } = false;
+    private bool _showPasswordDialog { get; set; } = false;
     private bool _showOrderItemDialog { get; set; } /* = false; */
     private bool _showDeleteItemDialog { get; set; }
-    private bool _showOrderSummaryDialog { get; set; } = false ;
+    private bool _showOrderSummaryDialog { get; set; } = false;
     private bool _showIsMemberDialog { get; set; } = false;
     private bool _showMemberIdDialog { get; set; } = false;
     private List<CoffeeItems> _items { get; set; }
@@ -599,32 +624,38 @@ else
     private string _sortBy = "despcription";
     private string _sortDirection = "ascending";
     private string selectedCoffee { get; set; }
-    private string selectedAddons { get; set; }
-    private string selectedMembershipStatus { get; set; } ="NotMember";
+    // private string selectedAddons { get; set; }
+    private string selectedMembershipStatus { get; set; } = "NotMember";
     private string memberId { get; set; }
     private bool isMember { get; set; } = true;
     private int selectedQty { get; set; }
     private int unitPrice { get; set; }
-    private string _membershipId {get; set;}
-    // private int OrderCount { get; set; } = 0;
+    private string _membershipId { get; set; }
+    private int OrderCount { get; set; } = 0;
     private string MembershipType { get; set; }
+    private string[] selectedAddons = Array.Empty<string>();
 
     // public int selectedCoffeePrice { get; set; } = 0;
     // private int TotalAmount { get; set; }
     protected Boolean isOutOfStock { get; set; } = false;
     private string selectedIdentity { get; set; }
 
+    //new
+    string enteredPassword = "";
+    string password = "change10";
+
+
 
     private string selectedQtyS => selectedQty.ToString();
-    // private string TotalAmount => CalculateTotalAmount.ToString();
 
-    // private int CalculateTotalAmount => 5 * selectedQty;
+
+    //for addons list
+
 
     protected override void OnInitialized()
     {
         _items = CoffeeItemService.GetAll();
     }
-
 
 
 
@@ -642,7 +673,7 @@ else
     {
         isMember = _members.Any(member =>
            member.Membername == _membershipId  ||
-           member.PhoneNumber == _membershipId );
+           member.PhoneNumber == _membershipId);
 
     }
 
@@ -659,15 +690,12 @@ else
 
     // }
 
-    //For counting orders 
-    // private void OrderCounter ()
-    // {
-    //     // OrderCount++;
-    //     // Console.WriteLine(OrderCount);
+    //For counting orders
 
-       
-          
-        
+   
+
+
+
     // }
 
 
@@ -693,6 +721,17 @@ else
         _showEditItemDialog = true;
     }
 
+    private void ToggleAddonSelection(string addonName)
+    {
+        if (Array.IndexOf(selectedAddons, addonName) != -1)
+        {
+            selectedAddons = selectedAddons.Where(a => a != addonName).ToArray();
+        }
+        else
+        {
+            selectedAddons = selectedAddons.Concat(new[] { addonName }).ToArray();
+        }
+    }
 
 
     private void OpenOrderItemDialog()
@@ -744,12 +783,18 @@ else
 
     private void OpenEditItemDialog(CoffeeItems editItem)
     {
+        enteredPassword = "";
+        // _showPasswordDialog = true;
         _dialogTitle = "Edit Item";
         _dialogOkLabel = "Save";
 
         _itemModel = editItem;
+        _showPasswordDialog = true;
 
-        _showEditItemDialog = true;
+
+
+
+
     }
 
 
@@ -761,11 +806,7 @@ else
 
     private void updateItemPrice(ChangeEventArgs e)
     {
-        // if (_itemModel.ItemPrice > int.Parse(e.Value.ToString()))
-        // {
-        //     int decQ = _itemModel.ItemPrice - int.Parse(e.Value.ToString());
-        //     CoffeeTakenService.Create(_itemModel.ItemName, decQ, _globalState.ActiveUser.Id, _globalState.ActiveUser.Roles == Roles.Admin ? _globalState.ActiveUser.Id : Guid.Empty);
-        // }
+
         if (_globalState.ActiveUser.Roles == Roles.Admin)
         {
             _itemModel.ItemPrice = int.Parse(e.Value.ToString());
@@ -773,17 +814,7 @@ else
 
     }
 
-    // private void updateCategory(ChangeEventArgs e)
-    // {
-    //     if (_itemModel.Category > int.Parse(e.Value.ToString()))
-    //     {
-    //         int decQ = _itemModel.ItemPrice - int.Parse(e.Value.ToString());
-    //         CoffeeTakenService.Create(_itemModel.ItemName, decQ, _globalState.ActiveUser.Id, _globalState.ActiveUser.Roles == Roles.Admin ? _globalState.ActiveUser.Id : Guid.Empty);
-    //     }
-    //     if (_globalState.ActiveUser.Roles == Roles.Admin)
-    //     {
-    //         _itemModel.ItemPrice = int.Parse(e.Value.ToString());
-    //     }
+
 
     private void UpdateCategory(ChangeEventArgs e)
     {
@@ -797,7 +828,14 @@ else
     }
 
 
-
+    private void OnPasswordDialogClose()
+    {
+        _showPasswordDialog = false;
+        if (enteredPassword==password)
+        {
+            _showEditItemDialog = true;
+        }
+    }
 
     private void OnEditItemDialogClose(bool isCancel)
     {
@@ -808,6 +846,7 @@ else
         }
         else
         {
+
             try
             {
                 _editItemErrorMessage = "";
@@ -831,12 +870,19 @@ else
             {
                 _editItemErrorMessage = e.Message;
             }
+
+
         }
     }
 
+
+
+
     private void UpdateOrderModel()
     {
-        _orderModel.ItemName = selectedCoffee + " with " + selectedAddons;
+        // _orderModel.ItemName = selectedCoffee + " with " + selectedAddons;
+        _orderModel.ItemName = selectedCoffee;
+        _orderModel.Addons = selectedAddons;
         _orderModel.TotalAmount = selectedAddonsPrice + selectedCoffeePrice;
 
 
@@ -850,6 +896,7 @@ else
     private void OnOrderItemDialogClose(bool isCancel)
     {
         // Guid approvedBy = Guid.Empty;
+        
         _showOrderSummaryDialog = false;
 
         if (isCancel)
@@ -872,18 +919,18 @@ else
 
                 }
 
-                _orderedC = CoffeeTakenService.Create(_orderModel.ItemName, _orderModel.TotalAmount, _orderModel.TakenBy , _orderModel.MembershipVerificationId);
+                _orderedC = CoffeeTakenService.Create(_orderModel.ItemName, _orderModel.TotalAmount, _orderModel.TakenBy, _orderModel.MembershipVerificationId, _orderModel.Addons);
 
 
                 _showOrderItemDialog = false;
-                // OrderCounter();
+
             }
             catch (Exception e)
             {
                 _editItemErrorMessage = e.Message;
             }
 
-            
+
         }
     }
 

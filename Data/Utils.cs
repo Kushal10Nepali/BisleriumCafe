@@ -47,12 +47,17 @@ namespace BisleriumCafe.Data
             return CryptographicOperations.FixedTimeEquals(inputHash, hash);
         }
 
+        //public static string GetAppDirectoryPath()
+        //{
+        //    return Path.Combine(
+        //        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+        //        "BisleriumCafe-Rejina"
+        //    );
+        //}
+
         public static string GetAppDirectoryPath()
         {
-            return Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "BisleriumCafe-Rejina"
-            );
+            return @"C:\AppDevCourseWork\BisleriumCafe-Rejina";
         }
 
         public static string GetAppUsersFilePath()

@@ -41,7 +41,7 @@ namespace BisleriumCafe.Data
             return JsonSerializer.Deserialize<List<Member>>(json);
         }
 
-        public static List<Member> Create( string membername, string phoneNumber)
+        public static List<Member> Create( string membername, string phoneNumber ,int orderCount)
         {
             List<Member> members = GetAll();
             bool membernameExists = members.Any(x => x.Membername == membername);
@@ -57,13 +57,19 @@ namespace BisleriumCafe.Data
                     Membername = membername,
                     PhoneNumber = phoneNumber,
                     //CreatedBy = userId
+                    OrderCount = orderCount,
                 }
             );
             SaveAll(members);
             return members;
         }
 
-       
+        
+
+        
+
+      
+
 
         public static Member GetById(Guid id)
         {
@@ -72,6 +78,9 @@ namespace BisleriumCafe.Data
 
             return members.FirstOrDefault(x => x.Id == id);
         }
+
+       
+
 
         public static List<Member> Delete(Guid id)
         {

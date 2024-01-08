@@ -26,6 +26,15 @@
                     </a>
                 </div>
             </th>
+            <th>
+                    <div class="d-flex">
+                       Add-ins
+                        <a class='btn text-@(_sortBy == "ItemName" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
+                           @onclick='()=>SortByHandler("ItemName")'>
+                            <span class='oi oi-sort-@(_sortBy == "ItemName" ? _sortDirection : "ascending")' />
+                        </a>
+                    </div>
+            </th>
 
             <th>
                 <div class="d-flex">
@@ -38,7 +47,7 @@
             </th>
             <th>
                 <div class="d-flex">
-                    Taken By
+                   OrderID
                     <a class='btn text-@(_sortBy == "takenBy" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
                        @onclick='()=>SortByHandler("takenBy")'>
                         <span class='oi oi-sort-@(_sortBy == "takenBy" ? _sortDirection : "ascending")' />
@@ -55,7 +64,9 @@
                     </div>
                 </th>
 
-                <th></th>
+                <th>
+                    Taken By
+                </th>
         </tr>
     </thead>
     <tbody>
@@ -87,10 +98,23 @@
                 <tr>
 
                     <td>@CoffeeTaken.ItemName</td>
-
+                    
                     <td>
-                        @CoffeeTaken.TotalAmount
+                            @if (CoffeeTaken.Addons != null && CoffeeTaken.Addons.Any())
+                            {
+                                foreach (var addon in CoffeeTaken.Addons)
+                                {
+                                    <div>@addon</div>
+                                }
+                            }
+                            else
+                            {
+                                <div>No addons</div>
+                            }
                     </td>
+                        <td>
+                        @CoffeeTaken.TotalAmount
+                        </td>
                         <td>
                             @CoffeeTaken.Id
                         </td>
@@ -217,6 +241,7 @@
         }
     }
 
+   
 
 
     // private void ApproveItem(CoffeeTaken approvedItem)

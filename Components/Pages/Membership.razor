@@ -7,7 +7,7 @@
     <h1 class="navbar-brand mb-0 h1">Members</h1>
 
     <button class="btn btn-outline-success" type="button"  @onclick="OpenAddMemberDialog" >
-        <span class="oi oi-plus" /> Add
+        <span class="oi oi-plus" /> Register Member
     </button>
     </nav>
     <table class="table">
@@ -32,7 +32,7 @@
                 <td>@member.Id</td>
                 <td>@member.Membername</td
                 <td>@member.PhoneNumber</td>
-                <td>@member.OrderCount</td>
+               <td> @member.OrderCount</td>
                 <td>@GetMembershipType(member.OrderCount)</td>
                 <td>@member.CreatedAt.ToString("MMM dd, yyyy h:mm tt")</td>
                 @* <td>
@@ -107,17 +107,23 @@
     private Member _deleteMember { get; set; }
     private string _membername { get; set; }
     private string _phoneNumber { get; set; }
+    private int _orderCount { get; set; } = 0;
     // private Roles _role { get; set; }
+
+
 
     protected override void OnInitialized()
     {
         _members = MemberService.GetAll();
     }
 
-     private string GetMembershipType(int OrderCount)
+    private string GetMembershipType(int OrderCount)
     {
         return OrderCount > 14 ? "Regular" : "Irregular";
     }
+
+
+
 
     private void OpenAddMemberDialog()
     {
@@ -126,8 +132,38 @@
         _phoneNumber = "";
         // _role = Roles.User;
     }
+
+    List<CoffeeTaken> items = CoffeeTakenService.GetAll();
+    List<Member> members = MemberService.GetAll();
+
+    public void UpdateOrderCounts()
+    {
+        // Initialize the order count for each member to 0
+        foreach (Member member in members)
+        {
+            member.OrderCount = 0;
+        }
+
+        // Count the orders for each member
+        foreach (CoffeeTaken order in items)
+        {
+            Member correspondingMember = members.Find(m => m.Membername == order.MembershipVerificationId || m.PhoneNumber == order.MembershipVerificationId);
+
+            if (correspondingMember != null)
+            {
+                correspondingMember.OrderCount++;
+            }
+        }
+
+        // Now, each member object in the members list has its OrderCount property updated
+        // You can save the updated members list to your data storage (e.g., JSON file, database)
+
+    }
+
+
     private void OnAddMemberDialogClose(bool isCancel)
     {
+
         if (isCancel)
         {
 
@@ -135,10 +171,11 @@
         }
         else
         {
+            UpdateOrderCounts();
             try
             {
                     _addMemberErrorMessage = "";
-                    _members = MemberService.Create( _membername, _phoneNumber);
+                    _members = MemberService.Create( _membername, _phoneNumber , _orderCount);
                     _showAddMemberDialog = false;
                  
 

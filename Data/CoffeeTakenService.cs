@@ -37,7 +37,7 @@ namespace BisleriumCafe.Data
                 return JsonSerializer.Deserialize<List<CoffeeTaken>>(json);
             }
 
-            public static List<CoffeeTaken> Create( string itemName,  int totalamount , Guid takenBy , string membershipVerficationId  )
+            public static List<CoffeeTaken> Create( string itemName,  int totalamount , Guid takenBy , string membershipVerficationId , string[] addons)
             {
 
                 List<CoffeeTaken> items = GetAll();
@@ -50,6 +50,7 @@ namespace BisleriumCafe.Data
                     TotalAmount = totalamount,
                     //ApprovedBy = approvedBy,
                     MembershipVerificationId = membershipVerficationId ,
+                    Addons=addons,
                 });
                 SaveAll(items);
                 return items;
@@ -70,21 +71,23 @@ namespace BisleriumCafe.Data
                 return items;
             }
 
-            //public static List<CoffeeTaken> Approve(Guid id, Guid approvedBy)
-            //{
-            //    List<CoffeeTaken> items = GetAll();
-            //    CoffeeTaken itemToUpdate = items.FirstOrDefault(x => x.Id == id);
+      
 
-            //    if (itemToUpdate == null)
-            //    {
-            //        throw new Exception("Item not found.");
-            //    }
-            //    //itemToUpdate.ApprovedBy = approvedBy;
-            //    SaveAll(items);
-            //    return items;
-            //}
+        //public static List<CoffeeTaken> Approve(Guid id, Guid approvedBy)
+        //{
+        //    List<CoffeeTaken> items = GetAll();
+        //    CoffeeTaken itemToUpdate = items.FirstOrDefault(x => x.Id == id);
 
-            public static List<CoffeeTaken> getBarData()
+        //    if (itemToUpdate == null)
+        //    {
+        //        throw new Exception("Item not found.");
+        //    }
+        //    //itemToUpdate.ApprovedBy = approvedBy;
+        //    SaveAll(items);
+        //    return items;
+        //}
+
+        public static List<CoffeeTaken> getBarData()
             {
                 List<CoffeeTaken> items = GetAll();
 
