@@ -13,7 +13,8 @@ namespace BisleriumCafe.Data
 
     public class MemberService
     {
-       
+       private List <CoffeeTaken> _items = new List <CoffeeTaken>();
+       private List <Member> _members = new List <Member>();
 
         private static void SaveAll(List<Member> members)
         {
@@ -135,15 +136,13 @@ namespace BisleriumCafe.Data
                 throw new Exception("Member not found.");
             }
 
-          
-            
-
-            
-           
             SaveAll(members);
 
             return member;
         }
+
+      
+        }
     }
 
-}
+

@@ -26,8 +26,10 @@ namespace BisleriumCafe.Data
 
         public int TotalAmount { get; set; }
 
-        public int OrderC { get; set; } = 0;
+        public int OrderCount { get; set; } = 0;
 
+
+        
         //Added
         public string[] Addons { get; set; }
 

@@ -566,6 +566,7 @@ else
 
                     @if (isMember)
                     {
+                        
 
                         <div class="d-flex justify-content-between total-amount">
                             <span>Total Amount after discount (10%):</span>
@@ -627,7 +628,7 @@ else
     // private string selectedAddons { get; set; }
     private string selectedMembershipStatus { get; set; } = "NotMember";
     private string memberId { get; set; }
-    private bool isMember { get; set; } = true;
+    private bool isMember { get; set; } = false;
     private int selectedQty { get; set; }
     private int unitPrice { get; set; }
     private string _membershipId { get; set; }
@@ -692,7 +693,7 @@ else
 
     //For counting orders
 
-   
+
 
 
 
@@ -754,13 +755,25 @@ else
         _orderModel.MembershipVerificationId = _membershipId;
     }
 
-    private void OpenIsMemberDialog()
+    private void OpenIsMemberDialog(bool isCancel)
     {
+        if (isCancel)
+        {
+            _showIsMemberDialog=false;
+
+        }
+        else
+        {
+            
+        }
+
         _dialogTitle = "If the customer is a member , fill the membership";
         _dialogOkLabel = "Next";
         _orderModel = new CoffeeTaken();
         _orderModel.Id = Guid.Empty;
         _showIsMemberDialog = true;
+       
+
     }
 
 

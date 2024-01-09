@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "8rZ2xVjgXrrGJqOVGL35xFeisA06GlRinS2SIgYguz4=",
+  "Hash": "e8WTDtJuUnaPI2hiiVIcpiB97/Nw0kpRsclI6m1lSgQ=",
   "Source": "BisleriumCafe",
   "BasePath": "/",
   "Mode": "Root",
@@ -148,6 +148,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\index.html"
+    },
+    {
+      "Identity": "C:\\Users\\ACER\\source\\repos\\BisleriumCafe\\BisleriumCafe\\wwwroot\\js\\pdfGenerator.js",
+      "SourceId": "BisleriumCafe",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\ACER\\source\\repos\\BisleriumCafe\\BisleriumCafe\\wwwroot\\",
+      "BasePath": "/",
+      "RelativePath": "js/pdfGenerator.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\pdfGenerator.js"
     }
   ]
 }

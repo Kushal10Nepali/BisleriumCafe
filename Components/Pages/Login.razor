@@ -35,7 +35,7 @@
         <form class="text-center" @onsubmit="LoginHandler">
             <img class="mb-4" src="/appicon.png" alt="" height="72">
             <h1 class="h3 mb-3 fw-normal">ENTER YOUR LOGIN DETAILS</h1>
-            @if (_showDefaultCredentials)
+            @if (!_showDefaultCredentials)
             {
                 <div class="alert alert-info" role="alert">
                     Username: <strong>@UserService.SeedUsername</strong><br />

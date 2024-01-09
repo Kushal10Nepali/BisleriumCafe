@@ -29,13 +29,13 @@
     <AppXManifest Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2024-01-08T09:12:00.647</Modified>
+      <Modified>2024-01-08T20:07:55.284</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2024-01-08T09:12:00.536</Modified>
+      <Modified>2024-01-08T20:07:55.073</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\BisleriumCafe.runtimeconfig.json">
       <PackagePath>BisleriumCafe.runtimeconfig.json</PackagePath>
@@ -43,11 +43,11 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\BisleriumCafe.dll">
       <PackagePath>BisleriumCafe.dll</PackagePath>
-      <Modified>2024-01-08T09:12:00.328</Modified>
+      <Modified>2024-01-08T20:07:54.058</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\obj\Debug\net8.0-windows10.0.19041.0\win10-x64\apphost.exe">
       <PackagePath>BisleriumCafe.exe</PackagePath>
-      <Modified>2024-01-08T09:12:00.333</Modified>
+      <Modified>2024-01-08T20:07:54.104</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\Resources\Raw\AboutAssets.txt">
       <PackagePath>AboutAssets.txt</PackagePath>
@@ -71,7 +71,11 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\wwwroot\index.html">
       <PackagePath>wwwroot\index.html</PackagePath>
-      <Modified>2023-12-20T07:03:12.691</Modified>
+      <Modified>2024-01-08T20:03:25.514</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\wwwroot\js\pdfGenerator.js">
+      <PackagePath>wwwroot\js\pdfGenerator.js</PackagePath>
+      <Modified>2024-01-08T20:07:47.998</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\obj\Debug\net8.0-windows10.0.19041.0\win10-x64\resizetizer\sp\splashSplashScreen.scale-100.png">
       <PackagePath>splashSplashScreen.scale-100.png</PackagePath>
@@ -303,7 +307,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\BisleriumCafe.deps.json">
       <PackagePath>BisleriumCafe.deps.json</PackagePath>
-      <Modified>2023-12-28T11:52:52.917</Modified>
+      <Modified>2024-01-08T20:07:54.860</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ACER\.nuget\packages\microsoft.windows.sdk.net.ref\10.0.19041.31\lib\net6.0\Microsoft.Windows.SDK.NET.dll">
       <PackagePath>Microsoft.Windows.SDK.NET.dll</PackagePath>

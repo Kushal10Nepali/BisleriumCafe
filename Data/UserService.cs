@@ -15,7 +15,7 @@ namespace BisleriumCafe.Data
         public const string SeedUsername = "admin";
         public const string SeedPassword = "admin";
 
-        public const string SeedAdditionalPassword = "change";
+        //public const string SeedAdditionalPassword = "change";
 
         private static void SaveAll(List<User> users)
         {

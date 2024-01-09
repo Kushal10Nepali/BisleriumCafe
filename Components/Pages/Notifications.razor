@@ -1,7 +1,134 @@
 ﻿@page "/Notifications"
+@using BisleriumCafe.Data;
+@using Microsoft.JSInterop
+@using System.Threading.Tasks
 
-<h3>Notifications</h3>
+<h3>Reports:</h3>
+<button @onclick="GeneratePDF">Generate PDF</button>
+@* <p>Total Revenue: @filteredOrders.Sum(order => order.TotalAmount)</p> *@
+
+<h3>Top 5 Sold Coffees</h3>
+
+@if (mostSoldItems != null)
+{
+    <ul>
+        @foreach (var item in mostSoldItems)
+        {
+            <li>@item.ItemName</li>
+        }
+    </ul>
+}
+else
+{
+    <p>No data available.</p>
+}
+
+<h3>Top 5 most sold add-ins</h3>
+
+<ul>
+    @foreach (var addon in mostSoldAddins)
+    {
+        <li>@addon</li>
+    }
+</ul>
+
+<div>
+    <label for="startDate">Start Date:</label>
+    <input id="startDate" type="datetime-local" @bind="startDate" />
+
+    <label for="endDate">End Date:</label>
+    <input id="endDate" type="datetime-local" @bind="endDate" />
+
+    <button @onclick="FilterOrders">Filter Orders</button>
+</div>
+<div>
+    @if (filteredOrders != null && filteredOrders.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Coffee Name</th>
+                    <th>Addins</th>
+                    <th>Total Amount</th>
+                    <th>Order Id</th>
+                    <th>Taken at</th>
+                    <!-- Add other headers for additional properties -->
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in filteredOrders)
+                {
+                    <tr>
+                        <td>@order.ItemName</td>
+                       
+                        <td>
+                            @if (order.Addons != null && order.Addons.Any())
+                            {
+                                <ul>
+                                    @foreach (var addon in order.Addons)
+                                    {
+                                        <li>@addon</li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <p>No addons</p>
+                            }
+                        </td>
+                        <td>@order.TotalAmount</td>
+                        <td>@order.Id</td>
+                        <td>@order.TakenAt</td>
+                        <!-- Add other cells for additional properties -->
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No data available.</p>
+    }
+</div>
+
 
 @code {
+    private List<CoffeeTaken> mostSoldItems;
+    private List<string> mostSoldAddins;
+    private List<CoffeeTaken> orders;
+    private List<CoffeeTaken> filteredOrders;
+    private DateTime startDate;
+    private DateTime endDate;
+
+    protected override void OnInitialized()
+    {
+        // Initialize the orders list before using it
+        orders = CoffeeTakenService.GetAll() ?? new List<CoffeeTaken>();
+
+        // Call the method to get the top 5 sold coffees
+        mostSoldItems = CoffeeTakenService.GetMostSoldItems() ?? new List<CoffeeTaken>();
+        mostSoldAddins = CoffeeTakenService.GetMostSoldAddins() ?? new List<string>();
+    }
+
+    private void FilterOrders()
+    {
+        filteredOrders = orders?.Where(order =>
+            order.TakenAt >= startDate &&
+            order.TakenAt <= endDate
+        ).ToList() ?? new List<CoffeeTaken>();
+    }
+
+    
+    private async Task GeneratePDF()
+    {
+        // Use ../ to go up one level from pages to src, then into wwwroot/js
+        // var jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "../../wwwroot/js/pdfGenerator.js");
+
+        // // Pass an array with a single string as the second argument
+        // await jsModule.InvokeVoidAsync("generatePDF", new object[] { "" });
+    }
 
 }
+
+
+

@@ -25,6 +25,10 @@
       "PackagePath": "staticwebassets\\index.html"
     },
     {
+      "Id": "C:\\Users\\ACER\\source\\repos\\BisleriumCafe\\BisleriumCafe\\wwwroot\\js\\pdfGenerator.js",
+      "PackagePath": "staticwebassets\\js\\pdfGenerator.js"
+    },
+    {
       "Id": "obj\\Debug\\net8.0-android\\staticwebassets\\msbuild.BisleriumCafe.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },
