@@ -33,6 +33,8 @@ namespace BisleriumCafe.Data
         //Added
         public string[] Addons { get; set; }
 
+     
+
         public string  MembershipVerificationId { get; set; }
 
         

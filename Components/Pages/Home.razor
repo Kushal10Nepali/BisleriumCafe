@@ -371,6 +371,8 @@ else
 
             </div> *@
 
+
+
                     <div class="form-group">
                         <label for="selectedAddons">Select Add-ons:</label>
                         <div>
@@ -392,17 +394,6 @@ else
 
 
 
-                    @*  @foreach (var CoffeeItem in itemList.Where(CoffeeItem => CoffeeItem.ItemName==selectedAddons))
-            {
-
-            <label for="UnitPrice2">Unit price:</label>
-            <input id="unit-price" type="number" min='1'
-            class="form-control text-left"
-            readonly value="@CoffeeItem.ItemPrice" />
-
-
-
-            }
 
 
 
@@ -410,31 +401,6 @@ else
 
 
 
-            </div>
-            @*    <div class="form-group">
-            <label for="Membership status">Selecte Membership status:</label>
-            <select  class="form-control" id="membershipStatus" @bind="selectedMembershipStatus">
-            <option value="NotMember" default>Not Member</option>
-            <option value="Member">Member</option>
-            </select>
-
-            @if (selectedMembershipStatus == "Member")
-            {
-            <div class="form-group">
-            <label for="memberId">Enter Member ID:</label>
-            <input class="form-control" id="memberId" @bind="memberId"/>
-            </div>
-
-
-            }
-
-
-
-            else
-            {
-            memberId = "";
-
-            }
 
 
 
@@ -442,13 +408,17 @@ else
 
 
 
-            </div> *@
+
+
+
+
+
 
                 </div>
 
-                
-                   
-                
+
+
+
                 @* Right side of the take order section  *@
 
 
@@ -456,18 +426,7 @@ else
                     <div class="pt-11">
                         <div>
                             <p>Selected Coffee: @selectedCoffee</p>
-                            @* <p> Coffee price: @coffeeItem.ItemPrice * @selectedQty</p> *@
-                            <p>
-                                Selected Addons:
-                                <ul>
-                                    @foreach (var addon in selectedAddons)
-                                    {
-                                        <li>@addon</li>
-                                    }
-                                </ul>
-                            </p>
-                            @* <p> Coffee price: @coffeeItem.ItemPrice * @selectedQty</p> *@
-                            @* <p>Item Price: $@coffeeItem.ItemPrice</p> *@
+
 
 
                             <p>
@@ -476,26 +435,15 @@ else
 
                                 @code
                                 {
-                                    int selectedAddonsPrice = 0;
-                                    int selectedCoffeePrice = 0;
+        int selectedAddonsPrice = 0;
+        int selectedAddonsTotalPrice = 0;
+        int selectedCoffeePrice = 0;
                         }
 
-                        @* @foreach (var CoffeeItem in itemList.Where(CoffeeItem => CoffeeItem.ItemName==selectedAddons))
+
+                        @foreach (var CoffeeItem in itemList.Where(CoffeeItem => CoffeeItem.ItemName==selectedCoffee))
                                 {
 
-
-
-
-                                    selectedAddonsPrice = @CoffeeItem.ItemPrice;
-                                } *@
-
-                                @foreach (var CoffeeItem in itemList.Where(CoffeeItem => CoffeeItem.ItemName==selectedCoffee))
-                                {
-                                    @* <label for="qty">Unit price: @CoffeeItem.ItemPrice  </label> *@
-                                    @*
-                        <input id="unit-price" type="number" min='1'
-                        class="form-control text-left"
-                        readonly value="@CoffeeItem.ItemPrice" /> *@
                                     selectedCoffeePrice = @CoffeeItem.ItemPrice;
                                 }
 
@@ -506,10 +454,111 @@ else
 
                             <p>
 
-                                Coffee Price: @selectedCoffeePrice <br />
-                                Addons Price: @selectedAddonsPrice <br />
 
-                                Order Total: @(selectedAddonsPrice + selectedCoffeePrice)
+                                <!-- Display selected add-ons with prices -->
+                                <!-- Display selected add-ons with prices -->
+                                @*   <p>
+                        Selected Addons:
+                        <ul>
+                        @foreach (var addon in selectedAddons)
+                        {
+                        var addonItem = itemList.FirstOrDefault(item => item.ItemName == addon);
+                        if (addonItem != null)
+                        {
+                        <li>@addonItem.ItemName - $@addonItem.ItemPrice</li>
+
+                        @code {
+
+
+
+                        }
+                        }
+                        }
+                        </ul>
+                        </p>
+                        *@
+                                @*   <p>
+                        Selected Addons:
+                        <ul>
+                        @foreach (var addon in selectedAddons)
+                        {
+                        var addonItem = itemList.FirstOrDefault(item => item.ItemName == addon);
+                        if (addonItem != null)
+                        {
+                        <li>@addonItem.ItemName - Rs @addonItem.ItemPrice</li>
+
+
+
+
+
+
+
+                        }
+
+
+
+                        }
+
+
+                        </ul>
+                        </p> *@
+
+
+
+                            <p>
+                                Selected Addons:
+                                <ul>
+                                        @{
+                                            // Create a list to store selected add-ons prices
+                                            var selectedAddonsPrices = new List<int>();
+
+                                            foreach (var addon in selectedAddons)
+                                            {
+                                                var addonItem = itemList.FirstOrDefault(item => item.ItemName == addon);
+                                                // Ensure addonItem is not null before accessing its properties
+                                                if (addonItem != null)
+                                                {
+                                                <li>@addonItem.ItemName - Rs @addonItem.ItemPrice</li>
+
+
+                                                }
+                                                selectedAddonsPrices.Add(addonItem.ItemPrice);
+                                            }
+
+
+
+
+                                            addinTotal = selectedAddonsPrices.Sum();
+                                        }
+
+
+
+
+
+
+                                </ul>
+                            </p>
+
+
+
+
+
+
+
+
+
+
+
+
+                            <!-- Display prices for coffee, add-ons, and total -->
+                            <p>
+                                Coffee Price: Rs @selectedCoffeePrice <br />
+                                Addons Price: Rs @addinTotal <br />
+                                Order Total: Rs @(addinTotal + selectedCoffeePrice)
+                            </p>
+
+
+
                             </p>
                         </div>
 
@@ -548,32 +597,40 @@ else
                     </div>
 
                     <div class="d-flex justify-content-between mb-3">
-                        <span>Addons:</span>
+                        <span>Addins:</span>
                         <span>@string.Join(", ", selectedAddons)</span>
                     </div>
 
                     <div class="d-flex justify-content-between mb-3">
-                        <span>Coffee Price:</span>
-                        <span>@selectedAddonsPrice</span>
+                        <span>Addins Price:</span>
+                        <span>@addinTotal</span>
                     </div>
 
                     <hr>
 
                     <div class="d-flex justify-content-between total-amount">
-                        <span>Total Amount:</span>
-                        <span>@(selectedCoffeePrice + selectedAddonsPrice)</span>
+                        <span>Sub total Amount:</span>
+                        <span>@(addinTotal + selectedCoffeePrice)</span>
                     </div>
 
+                    
                     @if (isMember)
-                    {
-                        
+                        {
 
+                            <div class="d-flex justify-content-between total-amount">
+                                <span>Discount:</span>
+                                <span>@(discount)</span>
+                            </div>
+                        }
+                   
+
+                    
                         <div class="d-flex justify-content-between total-amount">
                             <span>Total Amount after discount (10%):</span>
-                            <span>@((selectedCoffeePrice + selectedAddonsPrice)*0.9)</span>
+                            <span>@(totalAmount- discount)</span>
                         </div>
 
-                    }
+                    
 
 
 
@@ -589,9 +646,10 @@ else
                 <div class="form-group">
                     <label for="membershipDetail">Enter Membership Detail:</label>
                     <input type="text" class="form-control" id="membershipDetail" @bind="_membershipId" />
+                    @* <button type="button" class="btn btn-primary" onclick="checkMembership">CheckMembership</button> *@
                 </div>
                 <div>
-                    @* <button class="btn btn-success" onclick="checkMembership">Check Membership</button> *@
+                    <button class="btn btn-success" @onclick="CheckMembership">Check Membership</button>
                 </div>
             </div>
         </ModalDialog>
@@ -635,34 +693,32 @@ else
     private int OrderCount { get; set; } = 0;
     private string MembershipType { get; set; }
     private string[] selectedAddons = Array.Empty<string>();
+    private int addinTotal { get; set; }
+    private int discount { get; set; } 
+    private int totalAmount { get; set; } 
 
     // public int selectedCoffeePrice { get; set; } = 0;
     // private int TotalAmount { get; set; }
     protected Boolean isOutOfStock { get; set; } = false;
     private string selectedIdentity { get; set; }
-
     //new
     string enteredPassword = "";
     string password = "change10";
 
 
 
+
     private string selectedQtyS => selectedQty.ToString();
-
-
-    //for addons list
 
 
     protected override void OnInitialized()
     {
         _items = CoffeeItemService.GetAll();
+        
     }
 
 
-
-
-
-
+    <!-- Rest of your component -->
     private void HandleOutOfStock(CoffeeItems coffeeItem)
     {
         coffeeItem.isOutOfStock = !coffeeItem.isOutOfStock;
@@ -670,13 +726,38 @@ else
 
     // Check Membership handler .
 
-    private void checkMembership()
+    private async Task CheckMembership()
     {
-        isMember = _members.Any(member =>
-           member.Membername == _membershipId  ||
-           member.PhoneNumber == _membershipId);
+        if (_members != null)
+        {
+            isMember = _members.Any(member =>
+                member.Membername == _membershipId || member.PhoneNumber == _membershipId);
+        }
+        else
+        {
+            // Handle the case when _members is null
+            isMember = false;
+        }
 
+        // Notify Blazor to re-render the component
+        StateHasChanged();
     }
+
+
+    // private void checkMembership()
+    // {
+
+    //     if (_members != null)
+    //     {
+    //         isMember = _members.Any(member =>
+    //             member.Membername == _membershipId || member.PhoneNumber == _membershipId);
+    //     }
+    //     else
+    //     {
+    //         // Handle the case when _members is null
+    //         isMember = false;
+    //     }
+    // }
 
     // private void checkMembershipType()
     // {
@@ -691,13 +772,17 @@ else
 
     // }
 
-    //For counting orders
 
 
 
 
-
+    // private void priceCalculator()
+    // {
+    //     int totalAmount = @addinTotal + selectedCoffeePrice;
+    //     double discount = totalAmount * 0.1;
     // }
+
+
 
 
     private void SortByHandler(string sortByName)
@@ -746,6 +831,9 @@ else
 
     private void OpenOrderSummaryDialog()
     {
+
+        
+
         _dialogTitle = "Order Summary";
         _dialogOkLabel = "Proceed to Payment";
         _orderModel = new CoffeeTaken();
@@ -764,7 +852,7 @@ else
         }
         else
         {
-            
+
         }
 
         _dialogTitle = "If the customer is a member , fill the membership";
@@ -772,7 +860,7 @@ else
         _orderModel = new CoffeeTaken();
         _orderModel.Id = Guid.Empty;
         _showIsMemberDialog = true;
-       
+
 
     }
 
@@ -896,7 +984,7 @@ else
         // _orderModel.ItemName = selectedCoffee + " with " + selectedAddons;
         _orderModel.ItemName = selectedCoffee;
         _orderModel.Addons = selectedAddons;
-        _orderModel.TotalAmount = selectedAddonsPrice + selectedCoffeePrice;
+        _orderModel.TotalAmount = addinTotal + selectedCoffeePrice;
 
 
     }
@@ -909,7 +997,7 @@ else
     private void OnOrderItemDialogClose(bool isCancel)
     {
         // Guid approvedBy = Guid.Empty;
-        
+
         _showOrderSummaryDialog = false;
 
         if (isCancel)
@@ -978,4 +1066,7 @@ else
         _tabFilter = status;
     }
 
+
+
 }
+

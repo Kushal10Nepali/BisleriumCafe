@@ -204,3 +204,10 @@ C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\obj\Debug\net8.0-windows1
 C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\obj\Debug\net8.0-windows10.0.19041.0\win10-x64\MultipleQualifiersPerDimensionFound.txt
 C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\obj\Debug\net8.0-windows10.0.19041.0\win10-x64\ProjectArchitectures.txt
 C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\obj\Debug\net8.0-windows10.0.19041.0\win10-x64\BisleriumCafe.sourcelink.json
+C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\BouncyCastle.Cryptography.dll
+C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\iTextSharp.LGPLv2.Core.dll
+C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\SkiaSharp.dll
+C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\Syncfusion.Compression.Portable.dll
+C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\Syncfusion.Licensing.dll
+C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\Syncfusion.Pdf.Portable.dll
+C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\libSkiaSharp.dll

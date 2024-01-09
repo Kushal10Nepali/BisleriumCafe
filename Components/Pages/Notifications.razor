@@ -2,9 +2,12 @@
 @using BisleriumCafe.Data;
 @using Microsoft.JSInterop
 @using System.Threading.Tasks
+@inject IJSRuntime js
+
 
 <h3>Reports:</h3>
-<button @onclick="GeneratePDF">Generate PDF</button>
+
+<button type="button" class=" btn btn-success" @onclick="@(p=>DownloadFile("report.pdf"))">Generate PDF</button>
 @* <p>Total Revenue: @filteredOrders.Sum(order => order.TotalAmount)</p> *@
 
 <h3>Top 5 Sold Coffees</h3>
@@ -118,14 +121,21 @@ else
         ).ToList() ?? new List<CoffeeTaken>();
     }
 
-    
-    private async Task GeneratePDF()
-    {
-        // Use ../ to go up one level from pages to src, then into wwwroot/js
-        // var jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "../../wwwroot/js/pdfGenerator.js");
 
-        // // Pass an array with a single string as the second argument
-        // await jsModule.InvokeVoidAsync("generatePDF", new object[] { "" });
+
+    // private async Task GeneratePDF()
+    // {
+    //     // Use ../ to go up one level from pages to src, then into wwwroot/js
+    //     // var jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "wwwroot/js/pdfGenerator.js");
+    //     var jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "../../wwwroot/js/pdfGenerator.js");
+
+    //     // Pass a string as the second argument
+    //     await jsModule.InvokeVoidAsync("generatePDF", "Order details");
+    // }
+    private void DownloadFile(string fileName)
+    {
+        var pdf = new ExportService();
+        pdf.DownloadPdf(js, fileName);
     }
 
 }
