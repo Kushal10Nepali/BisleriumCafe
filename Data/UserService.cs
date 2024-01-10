@@ -12,11 +12,12 @@ namespace BisleriumCafe.Data
 
     public class UserService
     {
+        //Username and password for seeding , admin as a first user .
         public const string SeedUsername = "admin";
         public const string SeedPassword = "admin";
 
-        //public const string SeedAdditionalPassword = "change";
 
+        // saves the list of users to a JSON file
         private static void SaveAll(List<User> users)
         {
             string appDataDirectoryPath = Utils.GetAppDirectoryPath();
@@ -31,6 +32,7 @@ namespace BisleriumCafe.Data
             File.WriteAllText(appUsersFilePath, json);
         }
 
+        // retrieves the list of users to a JSON file
         public static List<User> GetAll()
         {
             string appUsersFilePath = Utils.GetAppUsersFilePath();
@@ -43,6 +45,7 @@ namespace BisleriumCafe.Data
             return JsonSerializer.Deserialize<List<User>>(json);
         }
 
+        //creates a new user and adds it to the list of users.
         public static List<User> Create(Guid userId, string username, string password, Roles roles)
         {
             List<User> users = GetAll();
@@ -66,6 +69,7 @@ namespace BisleriumCafe.Data
             return users;
         }
 
+        //seeds the list of users with a default admin user if one does not already exist
         public static void SeedUsers()
         {
             var users = GetAll().FirstOrDefault(x => x.Roles == Roles.Admin);
@@ -76,16 +80,7 @@ namespace BisleriumCafe.Data
             }
         }
 
-        //public static void SeedAdditionalSecurity()
-        //{
-        //    var users = GetAll().FirstOrDefault(x => x.Roles == Roles.Admin);
-
-        //    if (users == null)
-        //    {
-        //        Create(Guid.Empty, SeedUsername, SeedPassword, Roles.Admin);
-        //    }
-        //}
-
+        //Retrieves a user by their unique identifier
         public static User GetById(Guid id)
         {
 
@@ -94,6 +89,7 @@ namespace BisleriumCafe.Data
             return users.FirstOrDefault(x => x.Id == id);
         }
 
+        //Deletes a user 
         public static List<User> Delete(Guid id)
         {
             List<User> users = GetAll();
@@ -162,7 +158,7 @@ namespace BisleriumCafe.Data
 
             return user;
         }
-       
+
 
     }
 

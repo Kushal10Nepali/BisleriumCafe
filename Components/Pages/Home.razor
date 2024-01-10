@@ -251,10 +251,6 @@
         </div> *@
 
 
-
-
-
-
                 @if (!string.IsNullOrEmpty(_editItemErrorMessage))
                 {
                     <AlertMessage Type="danger" Message="@_editItemErrorMessage" />
@@ -298,11 +294,10 @@ else
     @if (_showOrderItemDialog)
     {
 
-
         <ModalDialog Title="@_dialogTitle" OnClose="@OpenIsMemberDialog" OkLabel="@_dialogOkLabel">
 
 
-            <div class="row">
+            <div class="row bg-gradient">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="item">Select the Coffee:</label>
@@ -313,20 +308,9 @@ else
                             }
                         </select>
                     </div>
+                    <br/>
 
-                    @* <div class="form-group">
-            @foreach (var CoffeeItem in itemList.Where(CoffeeItem => CoffeeItem.ItemName==selectedCoffee))
-            {
-
-            @* <label for="qty">Unit price: @CoffeeItem.ItemPrice  </label> *@
-                    @*  <label for="UnitPrice">Unit price:</label>
-            <input id="unit-price" type="number" min='1'
-            class="form-control text-left"
-            readonly value="@CoffeeItem.ItemPrice"   />
-
-            }
-
-            </div> *@
+                  
 
 
                     <div class="form-group">
@@ -351,25 +335,7 @@ else
 
 
                         }
-                    </div>
-
-
-
-
-
-
-                    @*   <div class="form-group">
-            <label for="item">Select the Add-ons:</label>
-            <select  class="form-control" id="item"  @bind="selectedAddons" >
-            @foreach (var CoffeeItems in itemList.Where(CoffeeItems => CoffeeItems.Category =="Add-ons"))
-            {
-            <option value="@CoffeeItems.ItemName">@CoffeeItems.ItemName</option>
-
-
-            }
-            </select>
-
-            </div> *@
+                    </div
 
 
 
@@ -642,7 +608,7 @@ else
     if (_showIsMemberDialog)
     {
         <ModalDialog Title="@_dialogTitle" OnClose="@OpenOrderSummaryDialog" OkLabel="@_dialogOkLabel">
-            <div class="modal-body">
+            <div class="modal-body bg-light">
                 <div class="form-group">
                     <label for="membershipDetail">Enter Membership Detail:</label>
                     <input type="text" class="form-control" id="membershipDetail" @bind="_membershipId" />
@@ -741,23 +707,8 @@ else
         coffeeItem.isOutOfStock = !coffeeItem.isOutOfStock;
     }
 
-    // Check Membership handler .
 
-    // private void CheckMembership()
-    // {
-    //     if (_members != null)
-    //     {
-    //         isMember = _members.Any(member =>
-    //             member.Membername == _membershipId || member.PhoneNumber == _membershipId);
-    //     }
-    //     else
-    //     {
-    //         // Handle the case when _members is null
-    //         isMember = false;
-    //     }
-
-
-    // }
+   
     private void CheckMembership()
     {
         Member matchingMember = members.FirstOrDefault(member => member.Membername.Equals(_membershipId) || member.PhoneNumber.Equals(_membershipId));
@@ -785,18 +736,7 @@ else
 
 
 
-    // private void checkMembershipType()
-    // {
-    //     if (OrderCount >=15)
-    //     {
-    //         MembershipType = "Regular";
-    //     }
-    //     else
-    //     {
-    //         MembershipType = "Irregular";
-    //     }
-
-    // }
+ 
 
 
 

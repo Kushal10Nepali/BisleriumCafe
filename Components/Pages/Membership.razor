@@ -3,102 +3,102 @@
 @using BisleriumCafe.Shared
 
 <div class="body">
-    <nav class="navbar navbar-light bg-light justify-content-between">
-    <h1 class="navbar-brand mb-0 h1">Members</h1>
-
-    <button class="btn btn-outline-success" type="button"  @onclick="OpenAddMemberDialog" >
-        <span class="oi oi-plus" /> Register Member
-    </button>
-    @* <button class="btn btn-outline-success" type="button"  @onclick="UpdateOrderCountsAndCheckRegular" >
-        <span class="oi oi-plus" /> Update Membership
-    </button> *@
+    <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-between">
+        <h1 class="navbar-brand mb-0 h1">Members</h1>
+        <div class="d-flex">
+            <button class="btn btn-outline-success mr-2" type="button" @onclick="OpenAddMemberDialog">
+                <span class="oi oi-plus" /> Register Member
+            </button>
+            @* <button class="btn btn-outline-success" type="button" @onclick="UpdateOrderCountsAndCheckRegular">
+            <span class="oi oi-plus" /> Update Membership
+            </button> *@
+        </div>
     </nav>
-    <table class="table">
+    <table class="table mt-4">
         <thead>
             <tr>
                 <th>Member Id</th>
-                <th>Membername</th
+                <th>Member Name</th>
                 <th>Phone Number</th>
                 <th>Order Count</th>
                 <th>Type</th>
                 <th>Created At</th>
                 @* <th>CreatedBy</th> *@
                 <th>Actions</th>
-                
             </tr>
         </thead>
-    
-    <tbody>
-        @foreach (var member in _members)
-        {
-            <tr>
-                <td>@member.Id</td>
-                <td>@member.Membername</td
-                <td>@member.PhoneNumber</td>
-               <td> @member.OrderCount</td>
-                <td>@GetMembershipType(member.OrderCount)</td>
-                @* <td><td>@(member.MembershipType == 0 ? "Regular" : "Irregular")</td></td> *@
-                <td>@member.CreatedAt.ToString("MMM dd, yyyy h:mm tt")</td>
-                @* <td>
-                    @{
-                        var creator = MemberService.GetById(member.CreatedBy);
-                        <span>@(creator == null ? "Unknown" : creator.Membername)</span>
-                    }
+        <tbody>
+            @foreach (var member in _members)
+            {
+                <tr>
+                    <td>@member.Id</td>
+                    <td>@member.Membername</td>
+                    <td>@member.PhoneNumber</td>
+                    <td>@member.OrderCount</td>
+                    <td>@GetMembershipType(member.OrderCount)</td>
+                    @* <td><td>@(member.MembershipType == 0 ? "Regular" : "Irregular")</td></td> *@
+                    <td>@member.CreatedAt.ToString("MMM dd, yyyy h:mm tt")</td>
+                    @* <td>
+                @{
+                var creator = MemberService.GetById(member.CreatedBy);
+                <span>@(creator == null ? "Unknown" : creator.Membername)</span>
+                }
                 </td> *@
-                <td>
-                    <button disabled="@(_globalState.ActiveUser != null ? _globalState.ActiveUser.Id == member.Id : false)"
+                    <td>
+                        <button disabled="@(_globalState.ActiveUser != null ? _globalState.ActiveUser.Id == member.Id : false)"
                                 class="btn btn-dark" type="button" @onclick="()=>OpenDeleteMemberDialog(member)">
-                        <span class="oi oi-delete" /> Delete
-                    </button>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                            <span class="oi oi-delete" /> Delete
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
     @if (_showAddMemberDialog)
-{
+    {
         <ModalDialog Title="Add Member" OnClose="@OnAddMemberDialogClose" OkLabel="Add">
-        <form>
-            <div class="form-floating">
-                    <input type="text" class="form-control username" @bind="_membername" placeholder="Membername" />
-                <label for="floatingInput">Membername</label>
-            </div>
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control password" @bind="_phoneNumber" placeholder="PhoneNumber" />
-                <label for="floatingPassword">PhoneNumber</label>
-            </div>
-            @* <div class="form-check">
-                <input id="userRole" type="radio" class="form-check-input" name="role" value="@Roles.User"
-                   @onchange="RoleChangeHandler" checked="@(_role == Roles.User)">
-                <label class="form-check-label" for="userRole">@Roles.User</label>
+            <form>
+                <div class="form-floating">
+                    <input type="text" class="form-control username" @bind="_membername" placeholder="Member Name" />
+                    <label for="floatingInput">Member Name</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control password" @bind="_phoneNumber" placeholder="Phone Number" />
+                    <label for="floatingPassword">Phone Number</label>
+                </div>
+                @* <div class="form-check">
+            <input id="userRole" type="radio" class="form-check-input" name="role" value="@Roles.User"
+            @onchange="RoleChangeHandler" checked="@(_role == Roles.User)">
+            <label class="form-check-label" for="userRole">@Roles.User</label>
             </div> *@
 
-          @*   <div class="form-check">
-                <input id="adminRole" type="radio" class="form-check-input" name="role" value="@Roles.Admin"
-                   @onchange="RoleChangeHandler" checked="@(_role == Roles.Admin)">
-                <label class="form-check-label" for="adminRole">@Roles.Admin</label>
+                @*   <div class="form-check">
+            <input id="adminRole" type="radio" class="form-check-input" name="role" value="@Roles.Admin"
+            @onchange="RoleChangeHandler" checked="@(_role == Roles.Admin)">
+            <label class="form-check-label" for="adminRole">@Roles.Admin</label>
             </div>
- *@
+            *@
                 @if (!string.IsNullOrEmpty(_addMemberErrorMessage))
-            {
+                {
                     <AlertMessage Type="danger" Message="@_addMemberErrorMessage" />
-            }
-        </form>
-    </ModalDialog>
-}
+                }
+            </form>
+        </ModalDialog>
+    }
 
     @if (_showDeleteMemberDialog)
-{
+    {
         <ModalDialog Title="Delete Member" OnClose="@OnDeleteMemberDialogClose" OkLabel="Confirm">
             <p>Are you sure you want to delete <strong>@_deleteMember.Membername</strong> Member and their data?</p>
             @if (!string.IsNullOrEmpty(_deleteMemberErrorMessage))
-        {
+            {
                 <AlertMessage Type="danger" Message="@_deleteMemberErrorMessage" />
-        }
-    </ModalDialog>
-}
+            }
+        </ModalDialog>
+    }
 </div>
+
 
 @code {
     [CascadingParameter]

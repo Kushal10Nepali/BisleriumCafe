@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace BisleriumCafe.Data
 {
-    public static  class CoffeeItemService
+    public static class CoffeeItemService
     {
-        public static void SaveAll(List<CoffeeItems>coffees)
+        public static void SaveAll(List<CoffeeItems> coffees)
         {
             string appDataDirectoryPath = Utils.GetAppDirectoryPath();
             string coffeeFilePath = Utils.GetCoffeeInventoryFilePath();
 
-            if(!Directory.Exists(appDataDirectoryPath))
+            if (!Directory.Exists(appDataDirectoryPath))
             {
                 Directory.CreateDirectory(appDataDirectoryPath);
             }
@@ -40,10 +40,6 @@ namespace BisleriumCafe.Data
 
         public static List<CoffeeItems> Create(Guid userId, string itemName, string desc, string cat, int price, int qty, Guid approvedBy)
         {
-            //if (dueDate < DateTime.Today)
-            //{
-            //    throw new Exception("Due date must be in the future.");
-            //}
 
             List<CoffeeItems> items = GetAll();
             items.Add(new CoffeeItems
@@ -53,14 +49,15 @@ namespace BisleriumCafe.Data
                 CreatedBy = userId,
                 Description = desc,
                 Quantity = qty,
-                ItemPrice = price ,
+                ItemPrice = price,
                 Category = cat,
-                
+
             });
             SaveAll(items);
             return items;
         }
 
+        //Deletes a menuItem.
         public static List<CoffeeItems> Delete(Guid id)
         {
             List<CoffeeItems> items = GetAll();
@@ -77,8 +74,8 @@ namespace BisleriumCafe.Data
         }
 
 
-
-        public static List<CoffeeItems> Update(Guid id, string itemName, string desc,string cat, int qty, int price , Guid approvedBy)
+        //Updates and saves  the menuITems.
+        public static List<CoffeeItems> Update(Guid id, string itemName, string desc, string cat, int qty, int price, Guid approvedBy)
         {
             List<CoffeeItems> items = GetAll();
             CoffeeItems itemToUpdate = items.FirstOrDefault(x => x.Id == id);

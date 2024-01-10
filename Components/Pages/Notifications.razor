@@ -1,199 +1,5 @@
-﻿@* @page "/Notifications"
-@using BisleriumCafe.Data;
-@using Microsoft.JSInterop
-@using System.Threading.Tasks
-@inject IJSRuntime JSRuntime
-@inject IJSRuntime js
-@using BisleriumCafe.PDF;
-@using Syncfusion.Pdf
-@using Syncfusion.Pdf.Grid;
-@using Syncfusion.Drawing;
-@using Syncfusion.Pdf.Graphics;
-@inject Microsoft.JSInterop.IJSRuntime JS
-@using System.IO;
-
-
-<h3>Reports:</h3>
-<button class="btn btn-primary" @onclick="@ExportToPdf">Export to PDF</button>
-
-<h3>Top 5 Sold Coffees</h3>
-
-@if (mostSoldItems != null)
-{
-    <ul>
-        @foreach (var item in mostSoldItems)
-        {
-            <li>@item.ItemName</li>
-        }
-    </ul>
-}
-else
-{
-    <p>No data available.</p>
-}
-
-<h3>Top 5 most sold add-ins</h3>
-
-<ul>
-    @foreach (var addon in mostSoldAddins)
-    {
-        <li>@addon</li>
-    }
-</ul>
-
-<div>
-    <label for="startDate">Start Date:</label>
-    <input id="startDate" type="datetime-local" @bind="startDate" />
-
-    <label for="endDate">End Date:</label>
-    <input id="endDate" type="datetime-local" @bind="endDate" />
-
-    <button @onclick="FilterOrders">Filter Orders</button>
-</div>
-<div>
-    @if (filteredOrders != null && filteredOrders.Any())
-    {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Coffee Name</th>
-                    <th>Addins</th>
-                    <th>Total Amount</th>
-                    <th>Order Id</th>
-                    <th>Taken at</th>
-                    <!-- Add other headers for additional properties -->
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var order in filteredOrders)
-                {
-                    <tr>
-                        <td>@order.ItemName</td>
-                       
-                        <td>
-                            @if (order.Addons != null && order.Addons.Any())
-                            {
-                                <ul>
-                                    @foreach (var addon in order.Addons)
-                                    {
-                                        <li>@addon</li>
-                                    }
-                                </ul>
-                            }
-                            else
-                            {
-                                <p>No addons</p>
-                            }
-                        </td>
-                        <td>@order.TotalAmount</td>
-                        <td>@order.Id</td>
-                        <td>@order.TakenAt</td>
-                        <!-- Add other cells for additional properties -->
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <p>No data available.</p>
-    }
-</div>
-
-
-@code {
-    private List<CoffeeTaken> mostSoldItems;
-    private List<string> mostSoldAddins;
-    private List<CoffeeTaken> orders;
-    private List<CoffeeTaken> filteredOrders;
-    private DateTime startDate;
-    private DateTime endDate;
-
-    protected override void OnInitialized()
-    {
-        // Initialize the orders list before using it
-        orders = CoffeeTakenService.GetAll() ?? new List<CoffeeTaken>();
-
-        // Call the method to get the top 5 sold coffees
-        mostSoldItems = CoffeeTakenService.GetMostSoldItems() ?? new List<CoffeeTaken>();
-        mostSoldAddins = CoffeeTakenService.GetMostSoldAddins() ?? new List<string>();
-    }
-
-    private void FilterOrders()
-    {
-        filteredOrders = orders?.Where(order =>
-            order.TakenAt >= startDate &&
-            order.TakenAt <= endDate
-        ).ToList() ?? new List<CoffeeTaken>();
-    }
-
-
-
-    // private async Task GeneratePDF()
-    // {
-    //     // Use ../ to go up one level from pages to src, then into wwwroot/js
-    //     // var jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "wwwroot/js/pdfGenerator.js");
-    //     var jsModule = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "../../wwwroot/js/pdfGenerator.js");
-
-    //     // Pass a string as the second argument
-    //     await jsModule.InvokeVoidAsync("generatePDF", "Order details");
-    // }
-    private void DownloadFile(string fileName)
-    {
-        var pdf = new PDFGenerator();
-        pdf.DownloadPdf(js, fileName);
-    }
-
-    @functions {
-        void ExportToPdf()
-        {
-            int paragraphAfterSpacing = 8;
-            int cellMargin = 8;
-            //Create a new PDF document.
-            PdfDocument pdfDocument = new PdfDocument();
-            //Add Page to the PDF document.
-            PdfPage page = pdfDocument.Pages.Add();
-
-            //Create a new font.
-            PdfStandardFont font = new PdfStandardFont(PdfFontFamily.TimesRoman, 16);
-            //Create a text element to draw a text in PDF page.
-            PdfTextElement title = new PdfTextElement("PDF ", font, PdfBrushes.Black);
-            PdfLayoutResult result = title.Draw(page, new PointF(0, 0));
-            PdfStandardFont contentFont = new PdfStandardFont(PdfFontFamily.TimesRoman, 12);
-            //Create text element.
-            PdfTextElement content = new PdfTextElement("This component demonstrates fetching data from a client side and Exporting the data to PDF document using Syncfusion .NET PDF library.", contentFont, PdfBrushes.Black);
-            PdfLayoutFormat format = new PdfLayoutFormat();
-            format.Layout = PdfLayoutType.Paginate;
-            //Draw a text to the PDF document.
-            result = content.Draw(page, new RectangleF(0, result.Bounds.Bottom + paragraphAfterSpacing, page.GetClientSize().Width, page.GetClientSize().Height), format);
-
-            //Create a PdfGrid.
-            PdfGrid pdfGrid = new PdfGrid();
-            pdfGrid.Style.CellPadding.Left = cellMargin;
-            pdfGrid.Style.CellPadding.Right = cellMargin;
-            //Applying built-in style to the PDF grid
-            pdfGrid.ApplyBuiltinStyle(PdfGridBuiltinStyle.GridTable4Accent1);
-            //Assign data source.
-            // pdfGrid.DataSource = forecasts;
-            pdfGrid.Style.Font = contentFont;
-            //Draw PDF grid into the PDF page.
-            pdfGrid.Draw(page, new Syncfusion.Drawing.PointF(0, result.Bounds.Bottom + paragraphAfterSpacing));
-
-            //Create memory stream.
-            MemoryStream memoryStream = new MemoryStream();
-            //Save the PDF document.
-            pdfDocument.Save(memoryStream);
-            //Download the PDF document
-            JS.SaveAs("Sample.pdf", memoryStream.ToArray());
-        }
-    }
-}
-
-
-
- *@
-
-            @page "/Notifications"
+﻿
+@page "/Notifications"
 @using BisleriumCafe.Data
 @using Microsoft.JSInterop
 @using System.Threading.Tasks
@@ -207,86 +13,129 @@ else
 @inject Microsoft.JSInterop.IJSRuntime JS
 @using System.IO;
 
-<h3>Reports:</h3>
-<button class="btn btn-primary" @onclick="@ExportToPdf">Export to PDF</button>
+<div class="reports-container">
+    <h3>Reports:</h3>
+    <button class="btn btn-primary" @onclick="@ExportToPdf">Export to PDF</button>
 
-<h3>Top 5 Sold Coffees</h3>
-@if (mostSoldItems != null)
-{
-    <ul>
-        @foreach (var item in mostSoldItems)
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="top-sold-section">
+                    <h3>Top 5 Sold Coffees</h3>
+                    @if (mostSoldItems != null && mostSoldItems.Any())
+                    {
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Coffee Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in mostSoldItems)
+                                {
+                                    <tr>
+                                        <td>@item.ItemName</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p>No data available.</p>
+                    }
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="top-addons-section">
+                    <h3>Top 5 Most Sold Add-ins</h3>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>Add-ins</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var addon in mostSoldAddins)
+                            {
+                                <tr>
+                                    <td>@addon</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="filter-orders-section m-auto">
+        <label for="startDate">Start Date:</label>
+        <input id="startDate" type="datetime-local" @bind="startDate" />
+        <label for="endDate">End Date:</label>
+        <input id="endDate" type="datetime-local" @bind="endDate" />
+        <button class="btn btn-info" @onclick="FilterOrders">Filter Orders</button>
+    </div>
+
+    <div class="filtered-orders-section">
+        @if (filteredOrders != null && filteredOrders.Any())
         {
-            <li>@item.ItemName</li>
-        }
-    </ul>
-}
-else
-{
-    <p>No data available.</p>
-}
-
-<h3>Top 5 most sold add-ins</h3>
-<ul>
-    @foreach (var addon in mostSoldAddins)
-    {
-        <li>@addon</li>
-    }
-</ul>
-
-<div>
-    <label for="startDate">Start Date:</label>
-    <input id="startDate" type="datetime-local" @bind="startDate" />
-    <label for="endDate">End Date:</label>
-    <input id="endDate" type="datetime-local" @bind="endDate" />
-    <button @onclick="FilterOrders">Filter Orders</button>
-</div>
-
-<div>
-    @if (filteredOrders != null && filteredOrders.Any())
-    {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Coffee Name</th>
-                    <th>Addins</th>
-                    <th>Total Amount</th>
-                    <th>Order Id</th>
-                    <th>Taken at</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var order in filteredOrders)
+            <div class="filtered-orders-section">
+                @if (filteredOrders != null && filteredOrders.Any())
                 {
-                    <tr>
-                        <td>@order.ItemName</td>
-                        <td>
-                            @if (order.Addons != null && order.Addons.Any())
+                    <table class="table table-bordered-2 table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Coffee Name</th>
+                                <th>Addins</th>
+                                <th>Total Amount</th>
+                                <th>Order Id</th>
+                                <th>Taken at</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in filteredOrders)
                             {
-                                <ul>
-                                    @foreach (var addon in order.Addons)
-                                    {
-                                        <li>@addon</li>
-                                    }
-                                </ul>
+                                <tr>
+                                    <td>@order.ItemName</td>
+                                    <td>
+                                        @if (order.Addons != null && order.Addons.Any())
+                                        {
+                                            <ul>
+                                                @foreach (var addon in order.Addons)
+                                                {
+                                                    <li>@addon</li>
+                                                }
+                                            </ul>
+                                        }
+                                        else
+                                        {
+                                            <p>No addons</p>
+                                        }
+                                    </td>
+                                    <td>@order.TotalAmount</td>
+                                    <td>@order.Id</td>
+                                    <td>@order.TakenAt</td>
+                                </tr>
                             }
-                            else
-                            {
-                                <p>No addons</p>
-                            }
-                        </td>
-                        <td>@order.TotalAmount</td>
-                        <td>@order.Id</td>
-                        <td>@order.TakenAt</td>
-                    </tr>
+                        </tbody>
+                    </table>
                 }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <p>No data available.</p>
-    }
+                else
+                {
+                    <p>No data available.</p>
+                }
+            </div>
+
+        }
+        else
+        {
+            <p>No data available.</p>
+        }
+    </div>
 </div>
+
 
 @code {
     private List<CoffeeTaken> mostSoldItems;

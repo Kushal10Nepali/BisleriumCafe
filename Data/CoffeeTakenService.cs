@@ -5,12 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using static iTextSharp.text.pdf.AcroFields;
 
 namespace BisleriumCafe.Data
 {
     public class CoffeeTakenService
     {
-
+        //Saves the order to a directory. 
         private static void SaveAll(List<CoffeeTaken> todos)
         {
             string appDataDirectoryPath = Utils.GetAppDirectoryPath();
@@ -25,6 +26,7 @@ namespace BisleriumCafe.Data
             File.WriteAllText(todosFilePath, json);
         }
 
+        //Retrieves all the ordered Items .
         public static List<CoffeeTaken> GetAll()
         {
             string todosFilePath = Utils.GetCoffeeInventoryTakePath();
@@ -38,6 +40,7 @@ namespace BisleriumCafe.Data
             return JsonSerializer.Deserialize<List<CoffeeTaken>>(json);
         }
 
+        //Creates and add an order to a list .
         public static List<CoffeeTaken> Create(string itemName, int totalamount, Guid takenBy, string membershipVerficationId, string[] addons)
         {
 
@@ -57,6 +60,7 @@ namespace BisleriumCafe.Data
             return items;
         }
 
+        //Deletes an order from a list .
         public static List<CoffeeTaken> Delete(Guid id)
         {
             List<CoffeeTaken> items = GetAll();
@@ -72,6 +76,8 @@ namespace BisleriumCafe.Data
             return items;
         }
 
+
+        //retrieves the most sold coffee items based on the count of each item taken.
         public static List<CoffeeTaken> GetMostSoldItems()
         {
             List<CoffeeTaken> items = GetAll(); // Assuming GetAll() retrieves all coffee items taken
@@ -101,6 +107,7 @@ namespace BisleriumCafe.Data
             return mostSoldItems;
         }
 
+        //retrieves the most sold addins items based on the count of each item taken.
         public static List<string> GetMostSoldAddins()
         {
             List<CoffeeTaken> items = GetAll(); // Assuming GetAll() retrieves all coffee items taken
@@ -143,41 +150,6 @@ namespace BisleriumCafe.Data
 
             return groupedOrders;
         }
-
-       
-
-
-
-
-
-
-        //private Dictionary<string, int> orderCountByMembershipId;
-
-        //protected  void LoadData()
-        //{
-        //    // Call the method to get all coffee items taken
-        //    List<CoffeeTaken> items = CoffeeTakenService.GetAll();
-
-        //    // Initialize the dictionary
-        //    orderCountByMembershipId = new Dictionary<string, int>();
-
-        //    // Count occurrences of each item by MembershipVerificationId
-        //    foreach (var item in items)
-        //    {
-        //        if (orderCountByMembershipId.ContainsKey(item.MembershipVerificationId))
-        //        {
-        //            orderCountByMembershipId[item.MembershipVerificationId]++;
-        //        }
-        //        else
-        //        {
-        //            orderCountByMembershipId[item.MembershipVerificationId] = 1;
-        //        }
-        //    }
-        //}
-
-
-
-
 
         public static List<CoffeeTaken> getBarData()
         {

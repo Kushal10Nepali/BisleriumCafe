@@ -11,6 +11,7 @@ namespace BisleriumCafe.Data
     {
         private const char _segmentDelimiter = ':';
 
+        //hashes a secret using PBKDF2 with SHA-256 algorithm.
         public static string HashSecret(string input)
         {
             var saltSize = 16;
@@ -29,6 +30,7 @@ namespace BisleriumCafe.Data
             );
         }
 
+        //verifies if a given input matches the hashed value.
         public static bool VerifyHash(string input, string hashString)
         {
             string[] segments = hashString.Split(_segmentDelimiter);
@@ -47,35 +49,33 @@ namespace BisleriumCafe.Data
             return CryptographicOperations.FixedTimeEquals(inputHash, hash);
         }
 
-        //public static string GetAppDirectoryPath()
-        //{
-        //    return Path.Combine(
-        //        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-        //        "BisleriumCafe-Rejina"
-        //    );
-        //}
 
+        // directory path of the application.
         public static string GetAppDirectoryPath()
         {
             return @"C:\AppDevCourseWork\BisleriumCafe-Rejina";
         }
 
+        //returns the full file path for the users' data
         public static string GetAppUsersFilePath()
         {
             return Path.Combine(GetAppDirectoryPath(), "users.json");
         }
 
+        //returns the full file path for the members' data
         public static string GetAppMembershipFilePath()
         {
             return Path.Combine(GetAppDirectoryPath(), "membership.json");
         }
 
 
-
+        //returns the full file path for the items data
         public static string GetCoffeeInventoryFilePath()
         {
             return Path.Combine(GetAppDirectoryPath(), "coffeeItems.json");
         }
+
+        //returns the full file path for the order data
         public static string GetCoffeeInventoryTakePath()
         {
             return Path.Combine(GetAppDirectoryPath(), "coffeeItemsTaken.json");

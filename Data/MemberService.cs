@@ -16,6 +16,7 @@ namespace BisleriumCafe.Data
        private List <CoffeeTaken> _items = new List <CoffeeTaken>();
        private List <Member> _members = new List <Member>();
 
+        //Saves a member to the list .
         private static void SaveAll(List<Member> members)
         {
             string appDataDirectoryPath = Utils.GetAppDirectoryPath();
@@ -30,6 +31,8 @@ namespace BisleriumCafe.Data
             File.WriteAllText(appMembershipFilePath, json);
         }
 
+
+        //Retrieves all members 
         public static List<Member> GetAll()
         {
             string appMembershipFilePath = Utils.GetAppMembershipFilePath();
@@ -42,7 +45,7 @@ namespace BisleriumCafe.Data
             return JsonSerializer.Deserialize<List<Member>>(json);
         }
 
-
+        //Creates a member and adds to the list 
         public static List<Member> Create( string membername, string phoneNumber ,int orderCount)
         {
             List<Member> members = GetAll();
@@ -66,46 +69,21 @@ namespace BisleriumCafe.Data
             return members;
         }
 
-        public static List<Member> UpdateOrderCountN(int orderCount)
-        {
-            List<Member> members = GetAll();
-            //bool membernameExists = members.Any(x => x.Membername == membername);
-
-
-            members.Add(
-                new Member
-                {
-                    //Membername = membername,
-                    //PhoneNumber = phoneNumber,
-                    //CreatedBy = userId
-                    OrderCount = orderCount,
-                }
-            );
-            SaveAll(members);
-            return members;
-        }
-
-
-        //public static void UpdateOrderCountsBasedOnGroups(Dictionary<string, List<CoffeeTaken>> groupedOrders)
+        //public static List<Member> UpdateOrderCountN(int orderCount)
         //{
         //    List<Member> members = GetAll();
+        //    //bool membernameExists = members.Any(x => x.Membername == membername);
 
-        //    foreach (var kvp in groupedOrders)
-        //    {
-        //        string membershipVerificationId = kvp.Key;
-        //        List<CoffeeTaken> ordersForId = kvp.Value;
 
-        //        Member member = members.FirstOrDefault(x => x.PhoneNumber == membershipVerificationId || x.Membername == membershipVerificationId);
-
-        //        if (member != null)
+        //    members.Add(
+        //        new Member
         //        {
-        //            // Update OrderCount based on the count of orders for this MembershipVerificationId
-        //            member.OrderCount += ordersForId.Count;
+                    
+        //            OrderCount = orderCount,
         //        }
-        //    }
-
-        //    // Save the updated list of members
+        //    );
         //    SaveAll(members);
+        //    return members;
         //}
 
 
@@ -132,40 +110,16 @@ namespace BisleriumCafe.Data
                 throw new Exception("Member not found.");
             }
 
-            //InventoryService.DeleteByUserId(id);
+         
             members.Remove(member);
             SaveAll(members);
 
             return members;
         }
 
-        //public static Member Login(string membername, string password)
-        //{
-        //    var loginErrorMessage = "Invalid membername or password.";
-        //    List<Member> members = GetAll();
-        //    Member member = members.FirstOrDefault(x => x.Membername == membername);
-
-        //    if (member == null)
-        //    {
-        //        throw new Exception(loginErrorMessage);
-        //    }
-
-        //    bool passwordIsValid = Utils.VerifyHash(password, member.PasswordHash);
-
-        //    if (!passwordIsValid)
-        //    {
-        //        throw new Exception(loginErrorMessage);
-        //    }
-
-        //    return member;
-        //}
 
         public static Member ChangePhoneNumber(Guid id, string newPassword)
         {
-            //if (currentPassword == newPassword)
-            //{
-            //    throw new Exception("New password must be different from current password.");
-            //}
 
             List<Member> members = GetAll();
             Member member = members.FirstOrDefault(x => x.Id == id);
