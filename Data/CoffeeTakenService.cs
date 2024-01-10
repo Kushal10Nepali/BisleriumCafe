@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Maui.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -132,45 +133,51 @@ namespace BisleriumCafe.Data
             return mostSoldAddins;
         }
 
-        private Dictionary<string, int> orderCountByMembershipId;
-
-        protected  void LoadData()
+        public static Dictionary<string, List<CoffeeTaken>> GroupOrdersByMembershipId()
         {
-            // Call the method to get all coffee items taken
-            List<CoffeeTaken> items = CoffeeTakenService.GetAll();
+            List<CoffeeTaken> orders = CoffeeTakenService.GetAll();
 
-            // Initialize the dictionary
-            orderCountByMembershipId = new Dictionary<string, int>();
+            // Group orders by MembershipVerificationId
+            var groupedOrders = orders.GroupBy(order => order.MembershipVerificationId)
+                                      .ToDictionary(group => group.Key, group => group.ToList());
 
-            // Count occurrences of each item by MembershipVerificationId
-            foreach (var item in items)
-            {
-                if (orderCountByMembershipId.ContainsKey(item.MembershipVerificationId))
-                {
-                    orderCountByMembershipId[item.MembershipVerificationId]++;
-                }
-                else
-                {
-                    orderCountByMembershipId[item.MembershipVerificationId] = 1;
-                }
-            }
+            return groupedOrders;
         }
 
+       
 
 
-        //public static List<CoffeeTaken> Approve(Guid id, Guid approvedBy)
+
+
+
+
+        //private Dictionary<string, int> orderCountByMembershipId;
+
+        //protected  void LoadData()
         //{
-        //    List<CoffeeTaken> items = GetAll();
-        //    CoffeeTaken itemToUpdate = items.FirstOrDefault(x => x.Id == id);
+        //    // Call the method to get all coffee items taken
+        //    List<CoffeeTaken> items = CoffeeTakenService.GetAll();
 
-        //    if (itemToUpdate == null)
+        //    // Initialize the dictionary
+        //    orderCountByMembershipId = new Dictionary<string, int>();
+
+        //    // Count occurrences of each item by MembershipVerificationId
+        //    foreach (var item in items)
         //    {
-        //        throw new Exception("Item not found.");
+        //        if (orderCountByMembershipId.ContainsKey(item.MembershipVerificationId))
+        //        {
+        //            orderCountByMembershipId[item.MembershipVerificationId]++;
+        //        }
+        //        else
+        //        {
+        //            orderCountByMembershipId[item.MembershipVerificationId] = 1;
+        //        }
         //    }
-        //    //itemToUpdate.ApprovedBy = approvedBy;
-        //    SaveAll(items);
-        //    return items;
         //}
+
+
+
+
 
         public static List<CoffeeTaken> getBarData()
         {

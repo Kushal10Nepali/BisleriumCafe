@@ -4,33 +4,9 @@
 @using BisleriumCafe.Data
 @* @inherits LoginBase *@
 
-@* <div class="container">
-    <div class="row justify-content-center mt-5">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header text-center bg-primary text-white">
-                    <h3>Login</h3>
-                </div>
-                <div class="card-body">
-                    <form>
-                        <div class="form-group">
-                            <label for="username">Username:</label>
-                            <input type="text" class="form-control" id="username"  />
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Password:</label>
-                            <input type="password" class="form-control" id="password"  />
-                        </div>
-                        <button type="button" class="btn btn-primary btn-block" >Login</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
- *@
 
-                            <div class="login-body">
+
+@* <div class="login-body">
     <div class="form-login">
         <form class="text-center" @onsubmit="LoginHandler">
             <img class="mb-4" src="/appicon.png" alt="" height="72">
@@ -47,7 +23,7 @@
                 <input type="text" class="form-control username" @bind="_membername" placeholder="Username" />
                 <label for="floatingInput">Username</label>
             </div>
-            <br/>
+            <br />
             <div class="container form-floating mb-3">
                 <input type="password" class="form-control password" @bind="_password" placeholder="Password" />
                 <label for="floatingPassword">Password</label>
@@ -60,6 +36,51 @@
                 <span class="oi oi-account-login"></span> Login
             </button>
         </form>
+    </div>
+</div>
+ *@
+
+ <div class="container-fluid">
+    <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <form class="text-center" @onsubmit="LoginHandler">
+                        <img class="mb-4" src="/appicon.png" alt="" height="72">
+                        <h1 class="h3 mb-3 fw-normal"> WELCOME  </h1>
+
+                        <br/>
+
+                        @if (!_showDefaultCredentials)
+                        {
+                            <div class="alert alert-info" role="alert">
+                                Username: <strong>@UserService.SeedUsername</strong><br />
+                                Password: <strong>@UserService.SeedPassword</strong>
+                            </div>
+                        }
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" @bind="_membername" placeholder="Username">
+                            <label for="floatingInput">Username</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" @bind="_password" placeholder="Password">
+                            <label for="floatingPassword">Password</label>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(_errorMessage))
+                        {
+                            <AlertMessage Type="danger" Message="@_errorMessage" />
+                        }
+
+                        <button class="btn btn-dark" type="submit">
+                            <span class="oi oi-account-login"></span> Login
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

@@ -9,6 +9,9 @@
     <button class="btn btn-outline-success" type="button"  @onclick="OpenAddMemberDialog" >
         <span class="oi oi-plus" /> Register Member
     </button>
+    @* <button class="btn btn-outline-success" type="button"  @onclick="UpdateOrderCountsAndCheckRegular" >
+        <span class="oi oi-plus" /> Update Membership
+    </button> *@
     </nav>
     <table class="table">
         <thead>
@@ -34,6 +37,7 @@
                 <td>@member.PhoneNumber</td>
                <td> @member.OrderCount</td>
                 <td>@GetMembershipType(member.OrderCount)</td>
+                @* <td><td>@(member.MembershipType == 0 ? "Regular" : "Irregular")</td></td> *@
                 <td>@member.CreatedAt.ToString("MMM dd, yyyy h:mm tt")</td>
                 @* <td>
                     @{
@@ -109,20 +113,93 @@
     private string _phoneNumber { get; set; }
     private int _orderCount { get; set; } = 0;
     // private Roles _role { get; set; }
+    private List<CoffeeTaken> _orderedC { get; set; }
+
 
 
 
     protected override void OnInitialized()
     {
         _members = MemberService.GetAll();
+        _orderedC = CoffeeTakenService.GetAll();
+        UpdateOrderCountsBasedOnGroups(CoffeeTakenService.GroupOrdersByMembershipId());
+        // UpdateMembershipTypeBasedOnCoffeeTaken(CoffeeTakenService.GroupOrdersByMembershipId());
+        // UpdateMembershipTypeBasedOnCoffeeTaken(_members, CoffeeTakenService.GetAll());
+
+        
+
+        base.OnInitialized();
     }
+
+    private void UpdateOrderCountsBasedOnGroups(Dictionary<string, List<CoffeeTaken>> groupedOrders)
+    {
+        foreach (var kvp in groupedOrders)
+        {
+            string membershipVerificationId = kvp.Key;
+            List<CoffeeTaken> ordersForId = kvp.Value;
+
+            Member member = _members.FirstOrDefault(x => x.PhoneNumber == membershipVerificationId || x.Membername == membershipVerificationId);
+
+            if (member != null)
+            {
+                // Update OrderCount based on the count of orders for this MembershipVerificationId
+                member.OrderCount = ordersForId.Count;
+            }
+        }
+    }
+
+ private void UpdateMembershipTypeBasedOnCoffeeTaken(Dictionary<string, List<CoffeeTaken>> groupedOrders)
+{
+    foreach (var kvp in groupedOrders)
+    {
+        string membershipVerificationId = kvp.Key;
+        List<CoffeeTaken> ordersForId = kvp.Value;
+
+        // Find the member in the _members list using the membershipVerificationId
+        Member member = _members.FirstOrDefault(x => x.PhoneNumber == membershipVerificationId || x.Membername == membershipVerificationId);
+
+        if (member != null)
+        {
+            // Extract unique weekdays when coffee was taken, excluding Saturday and Sunday
+            var weekdays = ordersForId
+                .Where(order => order.TakenAt.DayOfWeek != DayOfWeek.Saturday && order.TakenAt.DayOfWeek != DayOfWeek.Sunday)
+                .ToList();
+
+            // Check if the member made purchases on every weekday (Monday to Friday) for a month
+            bool isRegular = weekdays.Count >= 22;
+
+            // Set the MembershipType accordingly (0 for regular, 1 for irregular)
+            member.MembershipType = isRegular ? 1 : 0;
+        }
+    }
+}
+
+
+
+private static bool IsRegularCustomerForMonth(List<CoffeeTaken> ordersForId)
+{
+    // Get the distinct days of the month when coffee was taken
+    var daysOfMonth = ordersForId
+        .Select(order => order.TakenAt.Date.Day)
+        .Distinct()
+        .ToList();
+
+    // Check if the member made purchases on every weekday (Monday to Friday) for a month
+    return daysOfMonth.Count >= 22 && daysOfMonth.All(day => day >= 1 && day <= 31);
+}
+
+
+  
+
 
     private string GetMembershipType(int OrderCount)
     {
-        return OrderCount > 14 ? "Regular" : "Irregular";
+        return OrderCount >=22 ? "Regular" : "Irregular";
     }
 
+    
 
+    
 
 
     private void OpenAddMemberDialog()
@@ -133,32 +210,34 @@
         // _role = Roles.User;
     }
 
-    List<CoffeeTaken> items = CoffeeTakenService.GetAll();
-    List<Member> members = MemberService.GetAll();
 
-    public void UpdateOrderCounts()
-    {
-        // Initialize the order count for each member to 0
-        foreach (Member member in members)
-        {
-            member.OrderCount = 0;
-        }
 
-        // Count the orders for each member
-        foreach (CoffeeTaken order in items)
-        {
-            Member correspondingMember = members.Find(m => m.Membername == order.MembershipVerificationId || m.PhoneNumber == order.MembershipVerificationId);
+    // List<CoffeeTaken> items = CoffeeTakenService.GetAll();
+    // List<Member> members = MemberService.GetAll();
 
-            if (correspondingMember != null)
-            {
-                correspondingMember.OrderCount++;
-            }
-        }
+    // public void UpdateOrderCounts()
+    // {
+    //     // Initialize the order count for each member to 0
+    //     foreach (Member member in members)
+    //     {
+    //         member.OrderCount = 0;
+    //     }
+
+    //     // Count the orders for each member
+    //     foreach (CoffeeTaken order in items)
+    //     {
+    //         Member correspondingMember = members.Find(m => m.Membername == order.MembershipVerificationId || m.PhoneNumber == order.MembershipVerificationId);
+
+    //         if (correspondingMember != null)
+    //         {
+    //             correspondingMember.OrderCount++;
+    //         }
+    //     }
 
         // Now, each member object in the members list has its OrderCount property updated
         // You can save the updated members list to your data storage (e.g., JSON file, database)
 
-    }
+    
 
 
     private void OnAddMemberDialogClose(bool isCancel)
@@ -171,7 +250,7 @@
         }
         else
         {
-            UpdateOrderCounts();
+            // UpdateOrderCounts();
             try
             {
                     _addMemberErrorMessage = "";
@@ -220,4 +299,6 @@
             }
         }
     }
+
+    
 }

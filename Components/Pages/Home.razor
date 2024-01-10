@@ -648,6 +648,19 @@ else
                     <input type="text" class="form-control" id="membershipDetail" @bind="_membershipId" />
                     @* <button type="button" class="btn btn-primary" onclick="checkMembership">CheckMembership</button> *@
                 </div>
+                 <hr />
+                <span> Membership ID : @_membershipId</span>
+                <hr/>
+                
+                @if (isMember)
+                {
+                    <span><strong>Is Member :</strong> Yes</span>
+                }
+                else
+                {
+                    <span><strong>Is Member :</strong> No</span>
+                }
+                <hr/>
                 <div>
                     <button class="btn btn-success" @onclick="CheckMembership">Check Membership</button>
                 </div>
@@ -691,11 +704,15 @@ else
     private int unitPrice { get; set; }
     private string _membershipId { get; set; }
     private int OrderCount { get; set; } = 0;
-    private string MembershipType { get; set; }
+    // private string MembershipType { get; set; }
     private string[] selectedAddons = Array.Empty<string>();
     private int addinTotal { get; set; }
     private int discount { get; set; } 
-    private int totalAmount { get; set; } 
+    private int totalAmount { get; set; }
+    private List<Member> members;
+    // private List<CoffeeTaken> _orderedC;
+
+
 
     // public int selectedCoffeePrice { get; set; } = 0;
     // private int TotalAmount { get; set; }
@@ -714,11 +731,11 @@ else
     protected override void OnInitialized()
     {
         _items = CoffeeItemService.GetAll();
-        
+        members = MemberService.GetAll();
+        _orderedC = CoffeeTakenService.GetAll();
+
     }
 
-
-    <!-- Rest of your component -->
     private void HandleOutOfStock(CoffeeItems coffeeItem)
     {
         coffeeItem.isOutOfStock = !coffeeItem.isOutOfStock;
@@ -726,27 +743,8 @@ else
 
     // Check Membership handler .
 
-    private async Task CheckMembership()
-    {
-        if (_members != null)
-        {
-            isMember = _members.Any(member =>
-                member.Membername == _membershipId || member.PhoneNumber == _membershipId);
-        }
-        else
-        {
-            // Handle the case when _members is null
-            isMember = false;
-        }
-
-        // Notify Blazor to re-render the component
-        StateHasChanged();
-    }
-
-
-    // private void checkMembership()
+    // private void CheckMembership()
     // {
-
     //     if (_members != null)
     //     {
     //         isMember = _members.Any(member =>
@@ -757,7 +755,35 @@ else
     //         // Handle the case when _members is null
     //         isMember = false;
     //     }
+
+
     // }
+    private void CheckMembership()
+    {
+        Member matchingMember = members.FirstOrDefault(member => member.Membername.Equals(_membershipId) || member.PhoneNumber.Equals(_membershipId));
+
+        if (matchingMember != null)
+        {
+            // Member found, apply discount
+            // ApplyDiscount();
+            isMember = true;
+        }
+        else
+        {
+            // Member not found, proceed without discount or handle accordingly
+            Console.WriteLine("Member not found.");
+            isMember = false;
+        }
+    }
+
+    //orderCount update function
+    public void updateOrderCount()
+    {
+        OrderCount++;
+    }
+    
+
+
 
     // private void checkMembershipType()
     // {
@@ -776,11 +802,7 @@ else
 
 
 
-    // private void priceCalculator()
-    // {
-    //     int totalAmount = @addinTotal + selectedCoffeePrice;
-    //     double discount = totalAmount * 0.1;
-    // }
+
 
 
 
@@ -832,15 +854,13 @@ else
     private void OpenOrderSummaryDialog()
     {
 
-        
-
         _dialogTitle = "Order Summary";
         _dialogOkLabel = "Proceed to Payment";
         _orderModel = new CoffeeTaken();
         _orderModel.Id = Guid.Empty;
         _showIsMemberDialog = false;
         _showOrderSummaryDialog = true;
-        _orderModel.MembershipVerificationId = _membershipId;
+        // _orderModel.MembershipVerificationId = _membershipId;
     }
 
     private void OpenIsMemberDialog(bool isCancel)
@@ -852,14 +872,14 @@ else
         }
         else
         {
-
+            _dialogTitle = "If the customer is a member , fill the membership";
+            _dialogOkLabel = "Next";
+            _orderModel = new CoffeeTaken();
+            _orderModel.Id = Guid.Empty;
+            _showIsMemberDialog = true;
         }
 
-        _dialogTitle = "If the customer is a member , fill the membership";
-        _dialogOkLabel = "Next";
-        _orderModel = new CoffeeTaken();
-        _orderModel.Id = Guid.Empty;
-        _showIsMemberDialog = true;
+       
 
 
     }
@@ -891,9 +911,6 @@ else
 
         _itemModel = editItem;
         _showPasswordDialog = true;
-
-
-
 
 
     }
@@ -986,6 +1003,7 @@ else
         _orderModel.Addons = selectedAddons;
         _orderModel.TotalAmount = addinTotal + selectedCoffeePrice;
 
+        _orderModel.MembershipVerificationId = _membershipId;
 
     }
 

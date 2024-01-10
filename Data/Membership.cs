@@ -21,7 +21,7 @@ namespace BisleriumCafe.Data
 
         public int OrderCount { get; set; }
 
-        public int MembershipType { get; set; }
+        public int MembershipType { get; set; } 
 
     }
 }

@@ -42,6 +42,7 @@ namespace BisleriumCafe.Data
             return JsonSerializer.Deserialize<List<Member>>(json);
         }
 
+
         public static List<Member> Create( string membername, string phoneNumber ,int orderCount)
         {
             List<Member> members = GetAll();
@@ -65,11 +66,49 @@ namespace BisleriumCafe.Data
             return members;
         }
 
-        
+        public static List<Member> UpdateOrderCountN(int orderCount)
+        {
+            List<Member> members = GetAll();
+            //bool membernameExists = members.Any(x => x.Membername == membername);
 
-        
 
-      
+            members.Add(
+                new Member
+                {
+                    //Membername = membername,
+                    //PhoneNumber = phoneNumber,
+                    //CreatedBy = userId
+                    OrderCount = orderCount,
+                }
+            );
+            SaveAll(members);
+            return members;
+        }
+
+
+        //public static void UpdateOrderCountsBasedOnGroups(Dictionary<string, List<CoffeeTaken>> groupedOrders)
+        //{
+        //    List<Member> members = GetAll();
+
+        //    foreach (var kvp in groupedOrders)
+        //    {
+        //        string membershipVerificationId = kvp.Key;
+        //        List<CoffeeTaken> ordersForId = kvp.Value;
+
+        //        Member member = members.FirstOrDefault(x => x.PhoneNumber == membershipVerificationId || x.Membername == membershipVerificationId);
+
+        //        if (member != null)
+        //        {
+        //            // Update OrderCount based on the count of orders for this MembershipVerificationId
+        //            member.OrderCount += ordersForId.Count;
+        //        }
+        //    }
+
+        //    // Save the updated list of members
+        //    SaveAll(members);
+        //}
+
+
 
 
         public static Member GetById(Guid id)
@@ -141,8 +180,11 @@ namespace BisleriumCafe.Data
             return member;
         }
 
-      
-        }
+       
+
+
+
     }
+}
 
 
