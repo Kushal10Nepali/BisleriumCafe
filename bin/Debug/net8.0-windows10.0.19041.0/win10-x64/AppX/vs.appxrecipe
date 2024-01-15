@@ -29,25 +29,25 @@
     <AppXManifest Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2024-01-10T06:46:00.136</Modified>
+      <Modified>2024-01-12T06:18:59.618</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2024-01-10T05:43:00.530</Modified>
+      <Modified>2024-01-11T21:40:05.181</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\BisleriumCafe.runtimeconfig.json">
       <PackagePath>BisleriumCafe.runtimeconfig.json</PackagePath>
-      <Modified>2024-01-09T07:37:53.666</Modified>
+      <Modified>2024-01-11T10:18:34.598</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\BisleriumCafe.dll">
       <PackagePath>BisleriumCafe.dll</PackagePath>
-      <Modified>2024-01-10T05:42:59.138</Modified>
+      <Modified>2024-01-12T06:18:58.532</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\obj\Debug\net8.0-windows10.0.19041.0\win10-x64\apphost.exe">
       <PackagePath>BisleriumCafe.exe</PackagePath>
-      <Modified>2024-01-10T05:42:59.225</Modified>
+      <Modified>2024-01-12T06:18:58.603</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\Resources\Raw\AboutAssets.txt">
       <PackagePath>AboutAssets.txt</PackagePath>
@@ -59,15 +59,23 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\wwwroot\css\bootstrap\bootstrap.min.css">
       <PackagePath>wwwroot\css\bootstrap\bootstrap.min.css</PackagePath>
-      <Modified>2023-12-20T07:03:12.696</Modified>
+      <Modified>2024-01-11T21:38:34.414</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\wwwroot\css\bootstrap\bootstrap.min.css.map">
       <PackagePath>wwwroot\css\bootstrap\bootstrap.min.css.map</PackagePath>
-      <Modified>2023-12-20T07:03:12.700</Modified>
+      <Modified>2024-01-11T21:38:34.441</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\wwwroot\favicon.png">
       <PackagePath>wwwroot\favicon.png</PackagePath>
       <Modified>2023-12-20T07:03:12.687</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\wwwroot\Image\Coffee.png">
+      <PackagePath>wwwroot\Image\Coffee.png</PackagePath>
+      <Modified>2024-01-11T06:40:55.451</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\wwwroot\Image\Logo.png">
+      <PackagePath>wwwroot\Image\Logo.png</PackagePath>
+      <Modified>2024-01-11T06:48:08.373</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\wwwroot\index.html">
       <PackagePath>wwwroot\index.html</PackagePath>
@@ -307,7 +315,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\bin\Debug\net8.0-windows10.0.19041.0\win10-x64\BisleriumCafe.deps.json">
       <PackagePath>BisleriumCafe.deps.json</PackagePath>
-      <Modified>2024-01-09T22:08:39.942</Modified>
+      <Modified>2024-01-11T10:18:34.593</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ACER\.nuget\packages\microsoft.windows.sdk.net.ref\10.0.19041.31\lib\net6.0\Microsoft.Windows.SDK.NET.dll">
       <PackagePath>Microsoft.Windows.SDK.NET.dll</PackagePath>

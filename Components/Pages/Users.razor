@@ -5,91 +5,87 @@
 @using BisleriumCafe.Shared; 
 
 <div class="body">
-<nav class="navbar navbar-light bg-light justify-content-between">
-    <h1 class="navbar-brand mb-0 h1">Users</h1>
+    <nav class="navbar navbar-light bg-light justify-content-between">
+        <h1 class="navbar-brand mb-0 h1" style="color: #7952b3;">Users</h1>
 
-    <button class="btn btn-outline-success" type="button" @onclick="OpenAddUserDialog">
-        <span class="oi oi-plus" /> Add
-    </button>
-
-</nav>
-<table class="table">
-    <thead>
-        <tr>
-            <th>User Id</th>
-            <th>Username</th>
-            <th>Role</th>
-            <th>Created At</th>
-            <th>CreatedBy</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in _users)
-        {
+        <button class="btn btn-outline-success" type="button" @onclick="OpenAddUserDialog"
+                style="background-color: #7952b3; border-color: #7952b3;">
+            <span class="oi oi-plus" style="color: #fff;"></span> Add
+        </button>
+    </nav>
+    <table class="table table-bordered table-striped mt-3">
+        <thead class="thead-dark">
             <tr>
-                <td>@user.Id</td>
-                <td>@user.Username</td>
-                <td>@user.Roles.ToString()</td>
-                <td>@user.CreatedAt.ToString("MMM dd, yyyy h:mm tt")</td>
-                <td>
-                    @{
-                        var creator = UserService.GetById(user.CreatedBy);
-                        <span>@(creator == null ? "Unknown" : creator.Username)</span>
-                    }
-                </td>
-                <td>
-                    <button disabled="@(_globalState.ActiveUser != null ? _globalState.ActiveUser.Id == user.Id : false)"
-                        class="btn btn-dark" type="button" @onclick="()=>OpenDeleteUserDialog(user)">
-                        <span class="oi oi-delete" /> Delete
-                    </button>
-                </td>
+                <th>User Id</th>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Created At</th>
+               
+                <th>Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
-
-@if (_showAddUserDialog)
-{
-    <ModalDialog Title="Add User" OnClose="@OnAddUserDialogClose" OkLabel="Add">
-        <form>
-            <div class="form-floating">
-                <input type="text" class="form-control username" @bind="_membername" placeholder="Username" />
-                <label for="floatingInput">Username</label>
-            </div>
-            <div class="form-floating mb-3">
-                <input type="password" class="form-control password" @bind="_password" placeholder="Password" />
-                <label for="floatingPassword">Password</label>
-            </div>
-            <div class="form-check">
-                <input id="userRole" type="radio" class="form-check-input" name="role" value="@Roles.User"
-                   @onchange="RoleChangeHandler" checked="@(_role == Roles.User)">
-                <label class="form-check-label" for="userRole">@Roles.User</label>
-            </div>
-            <div class="form-check">
-                <input id="adminRole" type="radio" class="form-check-input" name="role" value="@Roles.Admin"
-                   @onchange="RoleChangeHandler" checked="@(_role == Roles.Admin)">
-                <label class="form-check-label" for="adminRole">@Roles.Admin</label>
-            </div>
-            @if (!string.IsNullOrEmpty(_addUserErrorMessage))
+        </thead>
+        <tbody>
+            @foreach (var user in _users)
             {
-                <AlertMessage Type="danger" Message="@_addUserErrorMessage" />
+                <tr>
+                    <td>@user.Id</td>
+                    <td>@user.Username</td>
+                    <td>@user.Roles.ToString()</td>
+                    <td>@user.CreatedAt.ToString("MMM dd, yyyy h:mm tt")</td>
+                    
+                    <td>
+                        <button disabled="@(_globalState.ActiveUser != null ? _globalState.ActiveUser.Id == user.Id : false)"
+                                class="btn btn-danger" type="button" @onclick="()=>OpenDeleteUserDialog(user)">
+                            <span class="oi oi-delete" style="color: #fff;"></span> Delete
+                        </button>
+                    </td>
+                </tr>
             }
-        </form>
-    </ModalDialog>
-}
+        </tbody>
+    </table>
 
-@if (_showDeleteUserDialog)
-{
-    <ModalDialog Title="Delete User" OnClose="@OnDeleteUserDialogClose" OkLabel="Confirm">
-        <p>Are you sure you want to delete <strong>@_deleteUser.Username</strong> user and their data?</p>
-        @if (!string.IsNullOrEmpty(_deleteUserErrorMessage))
-        {
-            <AlertMessage Type="danger" Message="@_deleteUserErrorMessage" />
-        }
-    </ModalDialog>
-}
+    @if (_showAddUserDialog)
+    {
+        <ModalDialog Title="Add User" OnClose="@OnAddUserDialogClose" OkLabel="Add">
+            <form>
+                <div class="form-floating">
+                    <input type="text" class="form-control username" @bind="_membername" placeholder="Username" />
+                    <label for="floatingInput">Username</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="password" class="form-control password" @bind="_password" placeholder="Password" />
+                    <label for="floatingPassword">Password</label>
+                </div>
+                <div class="form-check">
+                    <input id="userRole" type="radio" class="form-check-input" name="role" value="@Roles.User"
+                           @onchange="RoleChangeHandler" checked="@(_role == Roles.User)">
+                    <label class="form-check-label" for="userRole">@Roles.User</label>
+                </div>
+                <div class="form-check">
+                    <input id="adminRole" type="radio" class="form-check-input" name="role" value="@Roles.Admin"
+                           @onchange="RoleChangeHandler" checked="@(_role == Roles.Admin)">
+                    <label class="form-check-label" for="adminRole">@Roles.Admin</label>
+                </div>
+                @if (!string.IsNullOrEmpty(_addUserErrorMessage))
+                {
+                    <AlertMessage Type="danger" Message="@_addUserErrorMessage" />
+                }
+            </form>
+        </ModalDialog>
+    }
+
+    @if (_showDeleteUserDialog)
+    {
+        <ModalDialog Title="Delete User" OnClose="@OnDeleteUserDialogClose" OkLabel="Confirm">
+            <p>Are you sure you want to delete <strong>@_deleteUser.Username</strong> user and their data?</p>
+            @if (!string.IsNullOrEmpty(_deleteUserErrorMessage))
+            {
+                <AlertMessage Type="danger" Message="@_deleteUserErrorMessage" />
+            }
+        </ModalDialog>
+    }
 </div>
+
 
 @code {
     [CascadingParameter]

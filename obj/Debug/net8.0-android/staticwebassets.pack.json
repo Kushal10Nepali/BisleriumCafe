@@ -5,6 +5,14 @@
       "PackagePath": "staticwebassets\\BisleriumCafe.styles.css"
     },
     {
+      "Id": "C:\\Users\\ACER\\source\\repos\\BisleriumCafe\\BisleriumCafe\\wwwroot\\Image\\Coffee.png",
+      "PackagePath": "staticwebassets\\Image\\Coffee.png"
+    },
+    {
+      "Id": "C:\\Users\\ACER\\source\\repos\\BisleriumCafe\\BisleriumCafe\\wwwroot\\Image\\Logo.png",
+      "PackagePath": "staticwebassets\\Image\\Logo.png"
+    },
+    {
       "Id": "C:\\Users\\ACER\\source\\repos\\BisleriumCafe\\BisleriumCafe\\wwwroot\\css\\app.css",
       "PackagePath": "staticwebassets\\css\\app.css"
     },

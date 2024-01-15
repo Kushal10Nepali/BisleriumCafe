@@ -8,29 +8,21 @@
 <div class="container-fluid">
     <div class="row justify-content-center align-items-center min-vh-100">
         <div class="col-md-6 col-lg-4">
-            <div class="card shadow">
+            <div class="card shadow-lg rounded">
                 <div class="card-body p-4">
                     <form class="text-center" @onsubmit="LoginHandler">
                         <img class="mb-4" src="/appicon.png" alt="" height="72">
-                        <h1 class="h3 mb-3 fw-normal"> WELCOME  </h1>
+                        <h1 class="h3 mb-3 fw-normal text-primary">Welcome</h1>
 
-                        <br />
 
-                        @if (!_showDefaultCredentials)
-                        {
-                            <div class="alert alert-info" role="alert">
-                                Username: <strong>@UserService.SeedUsername</strong><br />
-                                Password: <strong>@UserService.SeedPassword</strong>
-                            </div>
-                        }
 
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" @bind="_membername" placeholder="Username">
+                            <input type="text" class="form-control rounded-pill" @bind="_membername" placeholder="Username">
                             <label for="floatingInput">Username</label>
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input type="password" class="form-control" @bind="_password" placeholder="Password">
+                            <input type="password" class="form-control rounded-pill" @bind="_password" placeholder="Password">
                             <label for="floatingPassword">Password</label>
                         </div>
 
@@ -38,7 +30,8 @@
                         {
                             <AlertMessage Type="danger" Message="@_errorMessage" />
                         }
-                        <button class="btn btn-primary" type="submit">
+
+                        <button class="btn btn-primary rounded-pill px-4 py-2" type="submit">
                             <span class="oi oi-account-login"></span> Login
                         </button>
                     </form>

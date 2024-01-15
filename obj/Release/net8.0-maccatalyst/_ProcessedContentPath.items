@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Content Include="Resources\Raw\AboutAssets.txt" />
+    <Content Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\obj\Release\net8.0-maccatalyst\scopedcss\bundle\BisleriumCafe.styles.css" />
+    <Content Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\obj\Release\net8.0-maccatalyst\scopedcss\projectbundle\BisleriumCafe.bundle.scp.css" />
+    <Content Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\wwwroot\css\app.css" />
+    <Content Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\wwwroot\css\bootstrap\bootstrap.min.css" />
+    <Content Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\wwwroot\css\bootstrap\bootstrap.min.css.map" />
+    <Content Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\wwwroot\favicon.png" />
+    <Content Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\wwwroot\Image\Coffee.png" />
+    <Content Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\wwwroot\Image\Logo.png" />
+    <Content Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\wwwroot\index.html" />
+    <Content Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\wwwroot\js\PDFGenerator.js" />
+  </ItemGroup>
+</Project>

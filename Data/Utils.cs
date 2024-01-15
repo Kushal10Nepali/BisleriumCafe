@@ -75,7 +75,7 @@ namespace BisleriumCafe.Data
             return Path.Combine(GetAppDirectoryPath(), "coffeeItems.json");
         }
 
-        //returns the full file path for the order data
+        //returns the full file path for the orderT data
         public static string GetCoffeeInventoryTakePath()
         {
             return Path.Combine(GetAppDirectoryPath(), "coffeeItemsTaken.json");

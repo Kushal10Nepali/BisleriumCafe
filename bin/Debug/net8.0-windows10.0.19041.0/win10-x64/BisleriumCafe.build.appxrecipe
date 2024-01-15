@@ -52,6 +52,12 @@
     <AppxPackagedFile Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\wwwroot\favicon.png">
       <PackagePath>wwwroot\favicon.png</PackagePath>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\wwwroot\Image\Coffee.png">
+      <PackagePath>wwwroot\Image\Coffee.png</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\wwwroot\Image\Logo.png">
+      <PackagePath>wwwroot\Image\Logo.png</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\ACER\source\repos\BisleriumCafe\BisleriumCafe\wwwroot\index.html">
       <PackagePath>wwwroot\index.html</PackagePath>
     </AppxPackagedFile>

@@ -13,19 +13,23 @@
 @inject Microsoft.JSInterop.IJSRuntime JS
 @using System.IO;
 
+
+
+
+
 <div class="reports-container">
-    <h3>Reports:</h3>
+    <h3 class="text-primary">Reports:</h3>
     <button class="btn btn-primary" @onclick="@ExportToPdf">Export to PDF</button>
 
-    <div class="container">
+    <div class="container mt-4">
         <div class="row">
             <div class="col-md-6">
-                <div class="top-sold-section">
+                <div class="top-sold-section border-bottom pb-4">
                     <h3>Top 5 Sold Coffees</h3>
                     @if (mostSoldItems != null && mostSoldItems.Any())
                     {
                         <table class="table table-bordered table-striped">
-                            <thead>
+                            <thead class="thead-dark">
                                 <tr>
                                     <th>Coffee Name</th>
                                 </tr>
@@ -42,15 +46,15 @@
                     }
                     else
                     {
-                        <p>No data available.</p>
+                        <p class="text-muted">No data available.</p>
                     }
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="top-addons-section">
+                <div class="top-addons-section border-bottom pb-4">
                     <h3>Top 5 Most Sold Add-ins</h3>
                     <table class="table table-bordered table-striped">
-                        <thead>
+                        <thead class="thead-dark">
                             <tr>
                                 <th>Add-ins</th>
                             </tr>
@@ -69,69 +73,61 @@
         </div>
     </div>
 
-
-    <div class="filter-orders-section m-auto">
-        <label for="startDate">Start Date:</label>
-        <input id="startDate" type="datetime-local" @bind="startDate" />
-        <label for="endDate">End Date:</label>
-        <input id="endDate" type="datetime-local" @bind="endDate" />
-        <button class="btn btn-info" @onclick="FilterOrders">Filter Orders</button>
+    <div class="filter-orders-section mt-4 border-bottom pb-4">
+        <div class="d-flex flex-column align-items-center">
+            <label for="startDate" class="mb-2">Start Date:</label>
+            <input id="startDate" type="datetime-local" @bind="startDate" class="mb-3" />
+            <label for="endDate" class="mb-2">End Date:</label>
+            <input id="endDate" type="datetime-local" @bind="endDate" class="mb-3" />
+            <button class="btn btn-info" @onclick="FilterOrders">Filter Orders</button>
+        </div>
     </div>
 
-    <div class="filtered-orders-section">
+
+    <div class="filtered-orders-section mt-4">
         @if (filteredOrders != null && filteredOrders.Any())
         {
-            <div class="filtered-orders-section">
-                @if (filteredOrders != null && filteredOrders.Any())
-                {
-                    <table class="table table-bordered-2 table-striped">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>Coffee Name</th>
-                                <th>Addins</th>
-                                <th>Total Amount</th>
-                                <th>Order Id</th>
-                                <th>Taken at</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var order in filteredOrders)
-                            {
-                                <tr>
-                                    <td>@order.ItemName</td>
-                                    <td>
-                                        @if (order.Addons != null && order.Addons.Any())
+            <table class="table table-bordered-2 table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Coffee Name</th>
+                        <th>Addins</th>
+                        <th>Total Amount</th>
+                        <th>Order Id</th>
+                        <th>Taken at</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var orderT in filteredOrders)
+                    {
+                        <tr>
+                            <td>@orderT.ItemName</td>
+                            <td>
+                                @if (orderT.Addons != null && orderT.Addons.Any())
+                                {
+                                    <ul>
+                                        @foreach (var addon in orderT.Addons)
                                         {
-                                            <ul>
-                                                @foreach (var addon in order.Addons)
-                                                {
-                                                    <li>@addon</li>
-                                                }
-                                            </ul>
+                                            <li>@addon</li>
                                         }
-                                        else
-                                        {
-                                            <p>No addons</p>
-                                        }
-                                    </td>
-                                    <td>@order.TotalAmount</td>
-                                    <td>@order.Id</td>
-                                    <td>@order.TakenAt</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                }
-                else
-                {
-                    <p>No data available.</p>
-                }
-            </div>
-
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <p class="text-muted">No addons</p>
+                                }
+                            </td>
+                            <td>@orderT.TotalAmount</td>
+                            <td>@orderT.Id</td>
+                            <td>@orderT.TakenAt</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         }
         else
         {
-            <p>No data available.</p>
+            <p class="text-muted">No data available.</p>
         }
     </div>
 </div>
@@ -157,9 +153,9 @@
 
     private void FilterOrders()
     {
-        filteredOrders = orders?.Where(order =>
-            order.TakenAt >= startDate &&
-            order.TakenAt <= endDate
+        filteredOrders = orders?.Where(orderT =>
+            orderT.TakenAt >= startDate &&
+            orderT.TakenAt <= endDate
         ).ToList() ?? new List<CoffeeTaken>();
     }
 
@@ -181,61 +177,73 @@
         pdfDocument.Save(memoryStream);
         // Download the PDF document.
         await JS.SaveAs("Sample.pdf", memoryStream.ToArray());
-    }
+    // }
 
-    private void ExportHtmlContentToPdf(PdfPage page, int paragraphAfterSpacing)
+
+     void ExportHtmlContentToPdf(PdfPage page, int paragraphAfterSpacing)
     {
         // Add a heading for top 5 most sold coffees
-        ExportHtmlToPdf(page, "<h3>Top 5 Sold Coffees</h3>", paragraphAfterSpacing);
+        ExportHtmlToPdf(page, "------------------------------------------------Top 5 most sold add-ins------------------------------------------------", paragraphAfterSpacing);
 
         // List the top 5 most sold coffees
         foreach (var item in mostSoldItems)
         {
-            ExportHtmlToPdf(page, $"<li>{item.ItemName}</li>", paragraphAfterSpacing);
+            ExportHtmlToPdf(page, $"-{item.ItemName}", paragraphAfterSpacing);
         }
 
         // Add a heading for top 5 most sold add-ins
-        ExportHtmlToPdf(page, "<h3>Top 5 most sold add-ins</h3>", paragraphAfterSpacing);
+        ExportHtmlToPdf(page, "------------------------------------------------Top 5 most sold add-ins------------------------------------------------", paragraphAfterSpacing);
 
         // List the top 5 most sold add-ins
         foreach (var addon in mostSoldAddins)
         {
-            ExportHtmlToPdf(page, $"<li>{addon}</li>", paragraphAfterSpacing);
+            ExportHtmlToPdf(page, $"-{addon}", paragraphAfterSpacing);
         }
 
+        // Add a heading for top 5 most sold coffees
+        ExportHtmlToPdf(page, "------------------------------------------------Top 5 most sold add-ins------------------------------------------------", paragraphAfterSpacing);
+        
+
         // Add a heading for the filtered orders
-        ExportHtmlToPdf(page, "<h3>Filtered Orders</h3>", paragraphAfterSpacing);
+        ExportHtmlToPdf(page, "Filtered Orders", paragraphAfterSpacing);
 
         // List the filtered orders in a table
         if (filteredOrders != null && filteredOrders.Any())
         {
             // Table header
-            ExportHtmlToPdf(page, "<table><thead><tr><th>Coffee Name</th><th>Addins</th><th>Total Amount</th><th>Order Id</th><th>Taken at</th></tr></thead><tbody>", paragraphAfterSpacing);
+            ExportHtmlToPdf(page, "Coffee              Addons               Total Amount                         Taken at", paragraphAfterSpacing);
 
             // Table body
-            foreach (var order in filteredOrders)
+            foreach (var orderT in filteredOrders)
             {
-                ExportHtmlToPdf(page, $"<tr><td>{order.ItemName}</td><td>{string.Join(", ", order.Addons)}</td><td>{order.TotalAmount}</td><td>{order.Id}</td><td>{order.TakenAt}</td></tr>", paragraphAfterSpacing);
+                ExportHtmlToPdf(page, $"{orderT.ItemName}---{string.Join(", ", orderT.Addons)}--------{orderT.TotalAmount}----------{orderT.TakenAt}", paragraphAfterSpacing);
             }
 
             // Close the table body and table
-            ExportHtmlToPdf(page, "</tbody></table>", paragraphAfterSpacing);
+            ExportHtmlToPdf(page, "", paragraphAfterSpacing);
         }
         else
         {
-            ExportHtmlToPdf(page, "<p>No data available.</p>", paragraphAfterSpacing);
+            ExportHtmlToPdf(page, "No data available.", paragraphAfterSpacing);
         }
     }
 
+    //Added.
+    
 
-    private void ExportHtmlToPdf(PdfPage page, string htmlContent, int paragraphAfterSpacing)
+     void ExportHtmlToPdf(PdfPage page, string htmlContent, int paragraphAfterSpacing)
     {
         PdfFont font = new PdfStandardFont(PdfFontFamily.Helvetica, 12);
+
+       
 
         // Draw the HTML content to PDF using DrawString method.
         page.Graphics.DrawString(htmlContent, font, PdfBrushes.Black, new PointF(0, 0));
 
         // Adjust the position for the next element.
         page.Graphics.TranslateTransform(0, font.MeasureString(htmlContent).Height + paragraphAfterSpacing);
+
     }
+
+}
 }

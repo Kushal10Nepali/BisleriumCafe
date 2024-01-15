@@ -64,5 +64,7 @@ wwwroot\css\app.css
 wwwroot\css\bootstrap\bootstrap.min.css
 wwwroot\css\bootstrap\bootstrap.min.css.map
 wwwroot\favicon.png
+wwwroot\Image\Coffee.png
+wwwroot\Image\Logo.png
 wwwroot\index.html
 wwwroot\js\PDFGenerator.js

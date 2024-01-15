@@ -11,7 +11,7 @@ namespace BisleriumCafe.Data
 {
     public class CoffeeTakenService
     {
-        //Saves the order to a directory. 
+        //Saves the orderT to a directory. 
         private static void SaveAll(List<CoffeeTaken> todos)
         {
             string appDataDirectoryPath = Utils.GetAppDirectoryPath();
@@ -40,7 +40,7 @@ namespace BisleriumCafe.Data
             return JsonSerializer.Deserialize<List<CoffeeTaken>>(json);
         }
 
-        //Creates and add an order to a list .
+        //Creates and add an orderT to a list .
         public static List<CoffeeTaken> Create(string itemName, int totalamount, Guid takenBy, string membershipVerficationId, string[] addons)
         {
 
@@ -60,7 +60,7 @@ namespace BisleriumCafe.Data
             return items;
         }
 
-        //Deletes an order from a list .
+        //Deletes an orderT from a list .
         public static List<CoffeeTaken> Delete(Guid id)
         {
             List<CoffeeTaken> items = GetAll();
@@ -78,78 +78,215 @@ namespace BisleriumCafe.Data
 
 
         //retrieves the most sold coffee items based on the count of each item taken.
+        //public static List<CoffeeTaken> GetMostSoldItems()
+        //{
+        //    List<CoffeeTaken> items = GetAll(); // Assuming GetAll() retrieves all coffee items taken
+        //    Dictionary<string, int> itemCounts = new Dictionary<string, int>();
+
+        //    // Count occurrences of each item
+        //    foreach (var item in items)
+        //    {
+        //        if (itemCounts.ContainsKey(item.ItemName))
+        //        {
+        //            itemCounts[item.ItemName]++;
+        //        }
+        //        else
+        //        {
+        //            itemCounts[item.ItemName] = 1;
+        //        }
+        //    }
+
+        //    // Sort items by count in descending orderT
+        //    var sortedItems = itemCounts.OrderByDescending(kv => kv.Value);
+
+        //    // Get the most sold items
+        //    var mostSoldItems = sortedItems.Take(5) // Change 5 to the number of top items you want to display
+        //                                     .Select(kv => new CoffeeTaken { ItemName = kv.Key })
+        //                                     .ToList();
+
+        //    return mostSoldItems;
+        //}
+
         public static List<CoffeeTaken> GetMostSoldItems()
         {
-            List<CoffeeTaken> items = GetAll(); // Assuming GetAll() retrieves all coffee items taken
-            Dictionary<string, int> itemCounts = new Dictionary<string, int>();
-
-            // Count occurrences of each item
-            foreach (var item in items)
+            try
             {
-                if (itemCounts.ContainsKey(item.ItemName))
+                List<CoffeeTaken> items = GetAll(); // Assuming GetAll() retrieves all coffee items taken
+
+                if (items == null)
                 {
-                    itemCounts[item.ItemName]++;
+                    // Handle the case where GetAll() returns null
+                    throw new InvalidOperationException("The list of coffee items is null.");
                 }
-                else
+
+                Dictionary<string, int> itemCounts = new Dictionary<string, int>();
+
+                // Count occurrences of each item
+                foreach (var item in items)
                 {
-                    itemCounts[item.ItemName] = 1;
-                }
-            }
-
-            // Sort items by count in descending order
-            var sortedItems = itemCounts.OrderByDescending(kv => kv.Value);
-
-            // Get the most sold items
-            var mostSoldItems = sortedItems.Take(5) // Change 5 to the number of top items you want to display
-                                             .Select(kv => new CoffeeTaken { ItemName = kv.Key })
-                                             .ToList();
-
-            return mostSoldItems;
-        }
-
-        //retrieves the most sold addins items based on the count of each item taken.
-        public static List<string> GetMostSoldAddins()
-        {
-            List<CoffeeTaken> items = GetAll(); // Assuming GetAll() retrieves all coffee items taken
-            Dictionary<string, int> addonCounts = new Dictionary<string, int>();
-
-            // Count occurrences of each add-in
-            foreach (var item in items)
-            {
-                foreach (var addon in item.Addons)
-                {
-                    if (addonCounts.ContainsKey(addon))
+                    if (itemCounts.ContainsKey(item.ItemName))
                     {
-                        addonCounts[addon]++;
+                        itemCounts[item.ItemName]++;
                     }
                     else
                     {
-                        addonCounts[addon] = 1;
+                        itemCounts[item.ItemName] = 1;
                     }
                 }
+
+                // Sort items by count in descending orderT
+                var sortedItems = itemCounts.OrderByDescending(kv => kv.Value);
+
+                // Get the most sold items
+                var mostSoldItems = sortedItems.Take(5) // Change 5 to the number of top items you want to display
+                                                .Select(kv => new CoffeeTaken { ItemName = kv.Key })
+                                                .ToList();
+
+                return mostSoldItems;
             }
-
-            // Sort add-ins by count in descending order
-            var sortedAddons = addonCounts.OrderByDescending(kv => kv.Value);
-
-            // Get the most sold add-ins
-            var mostSoldAddins = sortedAddons.Take(5) // Change 5 to the number of top add-ins you want to display
-                                             .Select(kv => kv.Key)
-                                             .ToList();
-
-            return mostSoldAddins;
+            catch (InvalidOperationException ex)
+            {
+                // Handle specific exception types
+                Console.WriteLine($"InvalidOperationException in GetMostSoldItems: {ex.Message}");
+                // Log, rethrow, or handle as appropriate
+                return new List<CoffeeTaken>();
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"An error occurred in GetMostSoldItems: {ex.Message}");
+                // Log, rethrow, or handle as appropriate
+                return new List<CoffeeTaken>();
+            }
         }
 
+
+        //retrieves the most sold addins items based on the count of each item taken.
+        //public static List<string> GetMostSoldAddins()
+        //{
+        //    List<CoffeeTaken> items = GetAll(); // Assuming GetAll() retrieves all coffee items taken
+        //    Dictionary<string, int> addonCounts = new Dictionary<string, int>();
+
+        //    // Count occurrences of each add-in
+        //    foreach (var item in items)
+        //    {
+        //        foreach (var addon in item.Addons)
+        //        {
+        //            if (addonCounts.ContainsKey(addon))
+        //            {
+        //                addonCounts[addon]++;
+        //            }
+        //            else
+        //            {
+        //                addonCounts[addon] = 1;
+        //            }
+        //        }
+        //    }
+
+        //    // Sort add-ins by count in descending orderT
+        //    var sortedAddons = addonCounts.OrderByDescending(kv => kv.Value);
+
+        //    // Get the most sold add-ins
+        //    var mostSoldAddins = sortedAddons.Take(5) // Change 5 to the number of top add-ins you want to display
+        //                                     .Select(kv => kv.Key)
+        //                                     .ToList();
+
+        //    return mostSoldAddins;
+        //}
+
+        public static List<string> GetMostSoldAddins()
+        {
+            try
+            {
+                List<CoffeeTaken> items = GetAll(); // Assuming GetAll() retrieves all coffee items taken
+
+                if (items == null)
+                {
+                    // Handle the case where GetAll() returns null
+                    throw new InvalidOperationException("The list of coffee items is null.");
+                }
+
+                Dictionary<string, int> addonCounts = new Dictionary<string, int>();
+
+                // Count occurrences of each add-in
+                foreach (var item in items)
+                {
+                    if (item?.Addons != null)
+                    {
+                        foreach (var addon in item.Addons)
+                        {
+                            if (addonCounts.ContainsKey(addon))
+                            {
+                                addonCounts[addon]++;
+                            }
+                            else
+                            {
+                                addonCounts[addon] = 1;
+                            }
+                        }
+                    }
+                }
+
+                // Sort add-ins by count in descending orderT
+                var sortedAddons = addonCounts.OrderByDescending(kv => kv.Value);
+
+                // Get the most sold add-ins
+                var mostSoldAddins = sortedAddons.Take(5) // Change 5 to the number of top add-ins you want to display
+                                                 .Select(kv => kv.Key)
+                                                 .ToList();
+
+                return mostSoldAddins;
+            }
+            catch (InvalidOperationException ex)
+            {
+                // Handle specific exception types
+                Console.WriteLine($"InvalidOperationException in GetMostSoldAddins: {ex.Message}");
+                // Log, rethrow, or handle as appropriate
+                return new List<string>();
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions
+                Console.WriteLine($"An error occurred in GetMostSoldAddins: {ex.Message}");
+                // Log, rethrow, or handle as appropriate
+                return new List<string>();
+            }
+        }
+
+
+
+        //public static Dictionary<string, List<CoffeeTaken>> GroupOrdersByMembershipId()
+        //{
+        //    List<CoffeeTaken> orders = CoffeeTakenService.GetAll();
+
+        //    var groupedOrders = orders.GroupBy(orderT => orderT.MembershipVerificationId)
+        //                         .ToDictionary(group => group.Key, group => group.ToList());
+
+        //    return groupedOrders;
+
+        //}
+
+        //changed
         public static Dictionary<string, List<CoffeeTaken>> GroupOrdersByMembershipId()
         {
-            List<CoffeeTaken> orders = CoffeeTakenService.GetAll();
+            try
+            {
+                List<CoffeeTaken> orders = CoffeeTakenService.GetAll();
 
-            // Group orders by MembershipVerificationId
-            var groupedOrders = orders.GroupBy(order => order.MembershipVerificationId)
-                                      .ToDictionary(group => group.Key, group => group.ToList());
+                var groupedOrders = orders.GroupBy(orderT => orderT.MembershipVerificationId)
+                                          .ToDictionary(group => group.Key, group => group.ToList());
 
-            return groupedOrders;
+                return groupedOrders;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it appropriately based on your application's needs.
+                // For example, you might want to log the exception and return an empty dictionary.
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return new Dictionary<string, List<CoffeeTaken>>();
+            }
         }
+
 
         public static List<CoffeeTaken> getBarData()
         {

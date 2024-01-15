@@ -16,7 +16,7 @@ namespace BisleriumCafe.Data
 
         public int Quantity { get; set; }
 
-        public int ItemPrice { get; set; }
+        public int ItemPrice { get; set; } 
 
         [Required(ErrorMessage = "Please provide the inventory description.")]
 

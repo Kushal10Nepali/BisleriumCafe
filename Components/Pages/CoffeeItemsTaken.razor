@@ -5,103 +5,99 @@
 
 @* body *@
 <div class="body">
-<nav class="navbar navbar bg justify-content-between">
-    <h1 class="navbar-brand mb-0 h1">Orders</h1>
-    <div class="d-flex">
-        <input type="search" class="form-control search" placeholder="Search" @oninput="SearchItemName" />
-        <a class='btn text-@(_sortBy == "ItemName" ? "primary" : "secondary")'
-           @onclick='()=>SortByHandler("ItemName")'>
+    <nav class="navbar navbar-light bg-light justify-content-between">
+        <h1 class="navbar-brand mb-0 h1" style="color: #7952b3;">Orders</h1>
+        <div class="d-flex align-items-center">
+            <input type="search" class="form-control search" placeholder="Search" @oninput="SearchItemName" />
+            <a class='btn text-@(_sortBy == "ItemName" ? "primary" : "secondary")'
+               @onclick='()=>SortByHandler("ItemName")'>
+                <span class='oi oi-sort-@(_sortBy == "ItemName" ? _sortDirection : "ascending")'></span>
+            </a>
+        </div>
+    </nav>
 
-        </a>
-    </div>
-</nav>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                <div class="d-flex">
-                    CoffeeItem
-                    <a class='btn text-@(_sortBy == "ItemName" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
-                       @onclick='()=>SortByHandler("ItemName")'>
-                        <span class='oi oi-sort-@(_sortBy == "ItemName" ? _sortDirection : "ascending")' />
-                    </a>
-                </div>
-            </th>
-            <th>
-                    <div class="d-flex">
-                       Add-ins
+    <table class="table table-bordered table-striped mt-3">
+        <thead class="thead-dark">
+            <tr>
+                <th>
+                    <div class="d-flex align-items-center">
+                        CoffeeItem
                         <a class='btn text-@(_sortBy == "ItemName" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
                            @onclick='()=>SortByHandler("ItemName")'>
-                            <span class='oi oi-sort-@(_sortBy == "ItemName" ? _sortDirection : "ascending")' />
+                            <span class='oi oi-sort-@(_sortBy == "ItemName" ? _sortDirection : "ascending")'></span>
                         </a>
                     </div>
-            </th>
-
-            <th>
-                <div class="d-flex">
-                    Total Price (Rs)
-                    <a class='btn text-@(_sortBy == "quantity" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
-                       @onclick='()=>SortByHandler("quantity")'>
-                        <span class='oi oi-sort-@(_sortBy == "quantity" ? _sortDirection : "ascending")' />
-                    </a>
-                </div>
-            </th>
-            <th>
-                <div class="d-flex">
-                   OrderID
-                    <a class='btn text-@(_sortBy == "takenBy" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
-                       @onclick='()=>SortByHandler("takenBy")'>
-                        <span class='oi oi-sort-@(_sortBy == "takenBy" ? _sortDirection : "ascending")' />
-                    </a>
-                </div>
-            </th>
+                </th>
                 <th>
-                    <div class="d-flex">
+                    <div class="d-flex align-items-center">
+                        Add-ins
+                        <a class='btn text-@(_sortBy == "ItemName" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
+                           @onclick='()=>SortByHandler("ItemName")'>
+                            <span class='oi oi-sort-@(_sortBy == "ItemName" ? _sortDirection : "ascending")'></span>
+                        </a>
+                    </div>
+                </th>
+                <th>
+                    <div class="d-flex align-items-center">
+                        Total Price (Rs)
+                        <a class='btn text-@(_sortBy == "quantity" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
+                           @onclick='()=>SortByHandler("quantity")'>
+                            <span class='oi oi-sort-@(_sortBy == "quantity" ? _sortDirection : "ascending")'></span>
+                        </a>
+                    </div>
+                </th>
+                <th>
+                    <div class="d-flex align-items-center">
+                        OrderID
+                        <a class='btn text-@(_sortBy == "takenBy" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
+                           @onclick='()=>SortByHandler("takenBy")'>
+                            <span class='oi oi-sort-@(_sortBy == "takenBy" ? _sortDirection : "ascending")'></span>
+                        </a>
+                    </div>
+                </th>
+                <th>
+                    <div class="d-flex align-items-center">
                         Taken At
                         <a class='btn text-@(_sortBy == "takenBy" ? "primary" : "secondary")' data-mdb-toggle="tooltip"
                            @onclick='()=>SortByHandler("takenAt")'>
-                            <span class='oi oi-sort-@(_sortBy == "takenAt" ? _sortDirection : "ascending")' />
+                            <span class='oi oi-sort-@(_sortBy == "takenAt" ? _sortDirection : "ascending")'></span>
                         </a>
                     </div>
                 </th>
-
                 <th>
                     Bought By
                 </th>
-        </tr>
-    </thead>
-    <tbody>
-        @{
-            IEnumerable<CoffeeTaken> itemList = _items;
+                <th>
+                    Actions
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                IEnumerable<CoffeeTaken> itemList = _items;
 
-            if (_sortBy == "ItemName")
-            {
-                itemList = _sortDirection == "ascending" ? itemList.OrderBy(t => t.ItemName) : itemList.OrderByDescending(t =>
-                t.ItemName);
-            }
+                if (_sortBy == "ItemName")
+                {
+                    itemList = _sortDirection == "ascending" ? itemList.OrderBy(t => t.ItemName) : itemList.OrderByDescending(t =>
+                    t.ItemName);
+                }
 
-            else if (_sortBy == "quantity")
-            {
-                itemList = _sortDirection == "ascending" ? itemList.OrderBy(t => t.Quantity) : itemList.OrderByDescending(t =>
-                t.Quantity);
-            }
-            else if (_sortBy == "takenBy")
-            {
-                itemList = _sortDirection == "ascending" ? itemList.OrderBy(t => t.TakenBy) : itemList.OrderByDescending(t =>
-                t.TakenBy);
-            }
-            
+                else if (_sortBy == "quantity")
+                {
+                    itemList = _sortDirection == "ascending" ? itemList.OrderBy(t => t.Quantity) : itemList.OrderByDescending(t =>
+                    t.Quantity);
+                }
+                else if (_sortBy == "takenBy")
+                {
+                    itemList = _sortDirection == "ascending" ? itemList.OrderBy(t => t.TakenBy) : itemList.OrderByDescending(t =>
+                    t.TakenBy);
+                }
 
-
-
-            foreach (var CoffeeTaken in itemList)
-            {
-                <tr>
-
-                    <td>@CoffeeTaken.ItemName</td>
-                    
-                    <td>
+                foreach (var CoffeeTaken in itemList)
+                {
+                    <tr>
+                        <td>@CoffeeTaken.ItemName</td>
+                        <td>
                             @if (CoffeeTaken.Addons != null && CoffeeTaken.Addons.Any())
                             {
                                 foreach (var addon in CoffeeTaken.Addons)
@@ -113,57 +109,38 @@
                             {
                                 <div>No addons</div>
                             }
-                    </td>
-                        <td>
-                        @CoffeeTaken.TotalAmount
                         </td>
+                        <td>@CoffeeTaken.TotalAmount</td>
+                        <td>@CoffeeTaken.Id</td>
+                        <td>@CoffeeTaken.TakenAt</td>
+                        <td>@CoffeeTaken.MembershipVerificationId</td>
                         <td>
-                            @CoffeeTaken.Id
+                            @if (_globalState != null && _globalState.ActiveUser != null && _globalState.ActiveUser.Roles == Roles.Admin)
+                            {
+                                <button class="btn btn-danger" type="button" @onclick="()=>OpenDeleteItemDialog(CoffeeTaken)">
+                                    <span class="oi oi-delete" style="color: #fff;"></span> Delete
+                                </button>
+                            }
                         </td>
-                        <td>
-                            @CoffeeTaken.TakenAt
-                        </td>
-                        <td>
-                        @CoffeeTaken.MembershipVerificationId
-                        </td>
-                   
-                    <td>
-
-                        @if (_globalState.ActiveUser.Roles == Roles.Admin)
-                        {
-                            <button class="btn btn-dark" type="button" @onclick="()=>OpenDeleteItemDialog(CoffeeTaken)">
-                                <span class="oi oi-delete" /> Delete
-                            </button>
-                            // @if (inventoryTaken.ApprovedBy == Guid.Empty)
-                            // {
-                            //     <button class="btn btn-success" type="button" @onclick="()=>ApproveItem(inventoryTaken)">
-                            //         <span class="oi oi-delete" /> Approve
-                            //     </button>
-                            // }
-
-                        }
-                    </td>
-                </tr>
+                    </tr>
+                }
             }
-        }
-    </tbody>
-</table>
+        </tbody>
+    </table>
 
-@if (_showDeleteItemDialog)
-{
-    <ModalDialog Title="Delete Item" OnClose="@OnDeleteItemDialogClose" OkLabel="Confirm">
-        <p>Are you sure you want to delete <strong>@_deleteItem.ItemName</strong> item?</p>
-        @if (!string.IsNullOrEmpty(_deleteItemErrorMessage))
-        {
-            <AlertMessage Type="danger" Message="@_deleteItemErrorMessage" />
-        }
-    </ModalDialog>
-    
-}
+    @if (_showDeleteItemDialog)
+    {
+        <ModalDialog Title="Delete Item" OnClose="@OnDeleteItemDialogClose" OkLabel="Confirm">
+            <p>Are you sure you want to delete <strong>@_deleteItem.ItemName</strong> item?</p>
+            @if (!string.IsNullOrEmpty(_deleteItemErrorMessage))
+            {
+                <AlertMessage Type="danger" Message="@_deleteItemErrorMessage" />
+            }
+        </ModalDialog>
+    }
 </div>
-<div class="hello">
-    <BarDiagram></BarDiagram>
-</div>
+
+
 @code {
     [CascadingParameter]
     private GlobalState _globalState { get; set; }

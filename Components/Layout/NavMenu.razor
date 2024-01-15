@@ -44,7 +44,7 @@
 @using BisleriumCafe.Data
 @inject NavigationManager NavManager
 
-<div class="top-row ps-3 navbar navbar-dark">
+<div class="top-row navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">Bislerium Coffee</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -54,8 +54,10 @@
 </div>
 
 <div class='@(_collapseNavMenu ? "collapse" : "")' @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3"><h5 class="text-light">Hello, <strong>@Username</strong>!</h5></div>
+    <nav class="flex-column sidebar">
+        <div class="nav-item px-3 mt-4">
+            <h5 class="text-light">Hello, <strong>@Username</strong>!</h5>
+        </div>
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="Home">
                 <span class="oi oi-list-rich" /> Menu
@@ -78,7 +80,7 @@
             <NavLink class="nav-link" href="change-password">
                 <span class="oi oi-key" /> Change Password
             </NavLink>
-        </div> 
+        </div>
         @if (UserRole == Roles.Admin)
         {
             <div class="nav-item px-3">
@@ -87,19 +89,21 @@
                 </NavLink>
             </div>
         }
-        
+
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="Notifications">
                 <span class="oi oi-key" /> Reports
             </NavLink>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link text-danger" role="button" @onclick="LogoutHandler">
+        <div class="nav-item px-3 mt-5">
+            <button class="btn btn-danger" @onclick="LogoutHandler">
                 <span class="oi oi-account-logout" /> Logout
-            </NavLink>
+            </button>
         </div>
+
     </nav>
 </div>
+
 
 @code {
     [Parameter]

@@ -2,8 +2,12 @@
 @using BisleriumCafe.Data;
 @using BisleriumCafe.Shared;
 
-@if (_globalState.ActiveUser.Roles == Roles.Admin)
+@if (_globalState != null && _globalState.ActiveUser != null && _globalState.ActiveUser.Roles == Roles.Admin)
 {
+   
+
+@* @if (_globalState.ActiveUser.Roles == Roles.Admin)
+{ *@
     <div class="body">
         <nav class="navbar navbar bg justify-content-between">
             <h1 class="navbar-brand mb-0 h1">Menus</h1>
@@ -30,19 +34,10 @@
             </li>
 
             <li class="nav-item">
-                <a class='nav-link btn @(_tabFilter == "InStock" ? "active" : "")' @onclick='()=>TabFilter("InStock")'>InStock</a>
-            </li>
-            <li class="nav-item">
                 <a class='nav-link btn @(_tabFilter == "OutOfStock" ? "active" : "")' @onclick='()=>TabFilter("OutOfStock")'>OutOfStock</a>
             </li>
 
-
         </ul>
-
-
-
-
-
 
         <table class="table">
             <thead>
@@ -217,46 +212,27 @@
         }
 
         @if (_showEditItemDialog)
-        {
-            <ModalDialog Title="@_dialogTitle" OnClose="@OnEditItemDialogClose" OkLabel="@_dialogOkLabel">
-                <div class="form-floating">
-                    <input id="ItemName" type="text" class="form-control" @bind="_itemModel.ItemName" placeholder="Task Name" />
-                    <label for="ItemName">Item Name</label>
-                </div>
-                <div class="form-floating">
-                    <input id="Description" type="text" class="form-control" @bind="_itemModel.Description" placeholder="Description" />
-                    <label for="Description">Description</label>
-                </div>
-                <div class="form-floating">
-                    <label for="price">Price</label>
-                    <input id="price" type="number" min='0'
-                           value='@_itemModel.ItemPrice' @onchange="updateItemPrice" class="form-control text-left"
-                           placeholder="price">
-                </div>
-
-                <div class="form-floating">
-                    <label for="category">Category</label>
-                    <input id="category" type="text"
-                           value='@_itemModel.Category' @onchange="UpdateCategory" class="form-control text-left"
-                           placeholder="category">
-                </div>
-                @* <div class="dropdown p-2">
-        <button class="btn btn-dark dropdown-toggle" type="button" id="categoryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Select Category
-        </button>
-        <div class="dropdown-menu" aria-labelledby="categoryDropdown" value="@_itemModel.Category">
-        <a @onclick="()=>UpdateCategory(" Coffee")">Coffee</a>
-        <a @onclick="()=>UpdateCategory(" Add-ons")">Add-ons</a>
+{
+    <ModalDialog Title="@_dialogTitle" OnClose="@OnEditItemDialogClose" OkLabel="@_dialogOkLabel">
+        <div class="form-group">
+            <label for="ItemName">Item Name</label>
+            <input id="ItemName" type="text" class="form-control" @bind="_itemModel.ItemName" placeholder="Enter Item Name" />
         </div>
-        </div> *@
+        <div class="form-group">
+            <label for="Description">Description</label>
+            <input id="Description" type="text" class="form-control" @bind="_itemModel.Description" placeholder="Enter Description" />
+        </div>
+        <div class="form-group">
+            <label for="price">Price</label>
+            <input id="price" type="number"   @onchange="updateItemPrice" class="form-control" placeholder="Enter Price" />
+        </div>
+        <div class="form-group">
+            <label for="category">Category</label>
+            <input id="category" type="text" value="@_itemModel.Category" @onchange="UpdateCategory" class="form-control" placeholder="Enter Category" />
+        </div>
+    </ModalDialog>
+}
 
-
-                @if (!string.IsNullOrEmpty(_editItemErrorMessage))
-                {
-                    <AlertMessage Type="danger" Message="@_editItemErrorMessage" />
-                }
-            </ModalDialog>
-        }
 
         @if (_showPasswordDialog)
         {
@@ -385,7 +361,7 @@ else
 
 
 
-                @* Right side of the take order section  *@
+                @* Right side of the take orderT section  *@
 
 
                 <div class="col-md-6 ">
@@ -548,7 +524,7 @@ else
     if (_showOrderSummaryDialog)
     {
         <ModalDialog Title="@_dialogTitle" OnClose="@OnOrderItemDialogClose" OkLabel="@_dialogOkLabel">
-            <div class="order-summary card">
+            <div class="orderT-summary card">
                 <div class="card-body">
                     <h5 class="card-title">Order Summary</h5>
 
@@ -580,20 +556,19 @@ else
                     </div>
 
                     
-                    @if (isMember)
-                        {
+                   
 
                             <div class="d-flex justify-content-between total-amount">
                                 <span>Discount:</span>
                                 <span>@(discount)</span>
                             </div>
-                        }
+                        
                    
 
                     
                         <div class="d-flex justify-content-between total-amount">
                             <span>Total Amount after discount (10%):</span>
-                            <span>@(totalAmount- discount)</span>
+                            <span>@((addinTotal + selectedCoffeePrice)- discount)</span>
                         </div>
 
                     
@@ -708,35 +683,68 @@ else
     }
 
 
-   
-    private void CheckMembership()
-    {
-        Member matchingMember = members.FirstOrDefault(member => member.Membername.Equals(_membershipId) || member.PhoneNumber.Equals(_membershipId));
 
-        if (matchingMember != null)
+    // private void CheckMembership()
+    // {
+    //     Member matchingMember = members.FirstOrDefault(member => member.Membername.Equals(_membershipId) || member.PhoneNumber.Equals(_membershipId));
+
+    //     if (matchingMember != null)
+    //     {
+    //         // Member found, apply discount
+    //         // ApplyDiscount();
+    //         isMember = true;
+    //     }
+    //     else
+    //     {
+    //         // Member not found, proceed without discount or handle accordingly
+    //         Console.WriteLine("Member not found.");
+    //         isMember = false;
+    //     }
+    // }
+
+    private void CheckMembership()
+{ 
+     // Assuming isMember is a boolean variable declared outside this method.
+
+    Member matchingMember = members.FirstOrDefault(member => member.Membername.Equals(_membershipId) || member.PhoneNumber.Equals(_membershipId));
+
+    if (matchingMember != null)
+    {
+        // Member found, apply discount
+        isMember = true;
+
+        if (matchingMember.OrderCount % 10 == 0 && matchingMember.OrderCount>0 )
         {
-            // Member found, apply discount
-            // ApplyDiscount();
-            isMember = true;
+            discount = addinTotal + selectedCoffeePrice;
+        }
+        else if (matchingMember.MembershipType == 0)
+        {
+            discount = (int)((addinTotal + selectedCoffeePrice) * 0.10);
         }
         else
         {
-            // Member not found, proceed without discount or handle accordingly
-            Console.WriteLine("Member not found.");
-            isMember = false;
+            discount = 0;
         }
     }
+    else
+    {
+        // Member not found, proceed without discount or handle accordingly
+        Console.WriteLine("Member not found.");
+        discount = 0;  // Set discount to 0 if member is not found.
+    }
+}
+
 
     //orderCount update function
     public void updateOrderCount()
     {
         OrderCount++;
     }
-    
 
 
 
- 
+
+
 
 
 
@@ -784,6 +792,8 @@ else
 
     private void OpenOrderItemDialog()
     {
+
+
         _dialogTitle = "Add Order Item";
         _dialogOkLabel = "Take Order";
         _orderModel = new CoffeeTaken();
@@ -791,34 +801,38 @@ else
         _showOrderItemDialog = true;
     }
 
-    private void OpenOrderSummaryDialog()
+    private void OpenOrderSummaryDialog(bool isCancel)
     {
-
-        _dialogTitle = "Order Summary";
+        if (isCancel)
+        {
+            // showOrderSummaryDialog = false;
+            _showIsMemberDialog = false;
+            _showOrderItemDialog = false;
+        }
+        else
+        {
+             _dialogTitle = "Order Summary";
         _dialogOkLabel = "Proceed to Payment";
         _orderModel = new CoffeeTaken();
         _orderModel.Id = Guid.Empty;
         _showIsMemberDialog = false;
         _showOrderSummaryDialog = true;
         // _orderModel.MembershipVerificationId = _membershipId;
+        }
+       
     }
 
     private void OpenIsMemberDialog(bool isCancel)
     {
-        if (isCancel)
-        {
-            _showIsMemberDialog=false;
 
-        }
-        else
-        {
+       
             _dialogTitle = "If the customer is a member , fill the membership";
             _dialogOkLabel = "Next";
             _orderModel = new CoffeeTaken();
             _orderModel.Id = Guid.Empty;
             _showIsMemberDialog = true;
-        }
-
+        
+        
        
 
 
@@ -865,10 +879,14 @@ else
     private void updateItemPrice(ChangeEventArgs e)
     {
 
-        if (_globalState.ActiveUser.Roles == Roles.Admin)
-        {
-            _itemModel.ItemPrice = int.Parse(e.Value.ToString());
-        }
+   
+    if (_globalState.ActiveUser.Roles == Roles.Admin)
+    {
+        // Directly parse to int, assuming e.Value is a valid integer
+        _itemModel.ItemPrice = int.Parse(e.Value?.ToString());
+    }
+
+
 
     }
 

@@ -4,9 +4,9 @@
 
 <div class="body">
     <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-between">
-        <h1 class="navbar-brand mb-0 h1">Members</h1>
+        <h1 class="navbar-brand mb-0 h1" style="color: #007bff;">Members</h1>
         <div class="d-flex">
-            <button class="btn btn-outline-success mr-2" type="button" @onclick="OpenAddMemberDialog">
+            <button class="btn btn-outline-primary mr-2" type="button" @onclick="OpenAddMemberDialog">
                 <span class="oi oi-plus" /> Register Member
             </button>
             @* <button class="btn btn-outline-success" type="button" @onclick="UpdateOrderCountsAndCheckRegular">
@@ -14,8 +14,8 @@
             </button> *@
         </div>
     </nav>
-    <table class="table mt-4">
-        <thead>
+    <table class="table mt-4 table-bordered table-hover">
+        <thead class="thead-dark">
             <tr>
                 <th>Member Id</th>
                 <th>Member Name</th>
@@ -38,16 +38,11 @@
                     <td>@GetMembershipType(member.OrderCount)</td>
                     @* <td><td>@(member.MembershipType == 0 ? "Regular" : "Irregular")</td></td> *@
                     <td>@member.CreatedAt.ToString("MMM dd, yyyy h:mm tt")</td>
-                    @* <td>
-                @{
-                var creator = MemberService.GetById(member.CreatedBy);
-                <span>@(creator == null ? "Unknown" : creator.Membername)</span>
-                }
-                </td> *@
+
                     <td>
                         <button disabled="@(_globalState.ActiveUser != null ? _globalState.ActiveUser.Id == member.Id : false)"
-                                class="btn btn-dark" type="button" @onclick="()=>OpenDeleteMemberDialog(member)">
-                            <span class="oi oi-delete" /> Delete
+                                class="btn btn-danger" type="button" @onclick="()=>OpenDeleteMemberDialog(member)">
+                            <span class="oi oi-delete" style="color: #fff;"></span> Delete
                         </button>
                     </td>
                 </tr>
@@ -98,6 +93,7 @@
         </ModalDialog>
     }
 </div>
+
 
 
 @code {
@@ -162,7 +158,7 @@
         {
             // Extract unique weekdays when coffee was taken, excluding Saturday and Sunday
             var weekdays = ordersForId
-                .Where(order => order.TakenAt.DayOfWeek != DayOfWeek.Saturday && order.TakenAt.DayOfWeek != DayOfWeek.Sunday)
+                .Where(orderT => orderT.TakenAt.DayOfWeek != DayOfWeek.Saturday && orderT.TakenAt.DayOfWeek != DayOfWeek.Sunday)
                 .ToList();
 
             // Check if the member made purchases on every weekday (Monday to Friday) for a month
@@ -180,7 +176,7 @@ private static bool IsRegularCustomerForMonth(List<CoffeeTaken> ordersForId)
 {
     // Get the distinct days of the month when coffee was taken
     var daysOfMonth = ordersForId
-        .Select(order => order.TakenAt.Date.Day)
+        .Select(orderT => orderT.TakenAt.Date.Day)
         .Distinct()
         .ToList();
 
@@ -217,16 +213,16 @@ private static bool IsRegularCustomerForMonth(List<CoffeeTaken> ordersForId)
 
     // public void UpdateOrderCounts()
     // {
-    //     // Initialize the order count for each member to 0
+    //     // Initialize the orderT count for each member to 0
     //     foreach (Member member in members)
     //     {
     //         member.OrderCount = 0;
     //     }
 
     //     // Count the orders for each member
-    //     foreach (CoffeeTaken order in items)
+    //     foreach (CoffeeTaken orderT in items)
     //     {
-    //         Member correspondingMember = members.Find(m => m.Membername == order.MembershipVerificationId || m.PhoneNumber == order.MembershipVerificationId);
+    //         Member correspondingMember = members.Find(m => m.Membername == orderT.MembershipVerificationId || m.PhoneNumber == orderT.MembershipVerificationId);
 
     //         if (correspondingMember != null)
     //         {

@@ -1,20 +1,22 @@
-﻿<div class="modal fade show" style="display:block; background-color: rgba(10,10,10,.8);"
-     role="dialog">
+﻿
+
+<div class="modal fade show" style="display:block; background: rgba(10,10,10,0.8); backdrop-filter: blur(10px);" role="dialog">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
+        <div class="modal-content" style="background-color: #fff; border-radius: 10px; box-shadow: 0px 0px 20px 0px #000;">
+            <div class="modal-header" style="border-bottom: 1px solid #ddd; background-color: #007bff; color: #fff;">
                 <h4 class="modal-title">@Title</h4>
             </div>
             <div class="modal-body">
                 @ChildContent
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn" @onclick="@ModalCancel">Cancel</button>
+            <div class="modal-footer" style="border-top: 1px solid #ddd; background-color: #f8f9fa;">
+                <button type="button" class="btn btn-secondary" @onclick="@ModalCancel" style="color: #fff;">Cancel</button>
                 <button type="button" class="btn btn-primary" @onclick=@ModalOk>@OkLabel</button>
             </div>
         </div>
     </div>
 </div>
+
 
 @code {
     [Parameter]
